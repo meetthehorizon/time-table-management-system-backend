@@ -33,7 +33,7 @@ public class AuthenticationService {
         User user = new User().setName(input.getName())
                 .setEmail(input.getEmail())
                 .setPhone(input.getPhone())
-                .setRole(Role.STUDENT)
+                .setRole(Role.USER)
                 .setAddress(input.getAddress())
                 .setPassword(passwordEncoder.encode(input.getPassword()));
 

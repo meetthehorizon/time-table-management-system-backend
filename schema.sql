@@ -12,7 +12,16 @@ CREATE TABLE
         phone CHAR(10),
         address VARCHAR(255),
         password VARCHAR(255),
-        role ENUM ('PARENT', 'STUDENT', 'TEACHER', 'EMPLOYEE'),
+        role ENUM (
+            'USER',
+            'ADMIN',
+            'PARENT',
+            'STUDENT',
+            'TEACHER',
+            'TT_INCHARGE',
+            'SCHOOL_INCHARGE',
+            'GENERAL_MANAGER'
+        ),
         PRIMARY KEY (id),
         UNIQUE (email),
         UNIQUE (phone)
@@ -48,32 +57,8 @@ CREATE TABLE
     employee (
         id BIGINT,
         school_id BIGINT,
-        position ENUM (
-            'TT_INCHARGE',
-            'SCHOOL_INCHARGE',
-            'GENERAL_MANAGER'
-        ),
         FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
         FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE SET NULL
-    );
-
-CREATE TABLE
-    permissions (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        permission_name VARCHAR(50) NOT NULL UNIQUE,
-        description VARCHAR(255)
-    );
-
-CREATE TABLE
-    role_permissions (
-        position ENUM (
-            'TT_INCHARGE',
-            'SCHOOL_INCHARGE',
-            'GENERAL_MANAGER'
-        ) NOT NULL,
-        permission_id BIGINT NOT NULL,
-        FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE CASCADE,
-        PRIMARY KEY (position, permission_id)
     );
 
 CREATE TABLE
