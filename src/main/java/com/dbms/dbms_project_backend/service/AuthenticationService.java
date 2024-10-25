@@ -14,16 +14,15 @@ import com.dbms.dbms_project_backend.repository.UserRepository;
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
-    
+
     private final PasswordEncoder passwordEncoder;
-    
+
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
-        UserRepository userRepository,
-        AuthenticationManager authenticationManager,
-        PasswordEncoder passwordEncoder
-    ) {
+            UserRepository userRepository,
+            AuthenticationManager authenticationManager,
+            PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -33,7 +32,7 @@ public class AuthenticationService {
         User user = new User().setName(input.getName())
                 .setEmail(input.getEmail())
                 .setPhone(input.getPhone())
-                .setRole(Role.USER)
+                .setRole(Role.ROLE_USER)
                 .setAddress(input.getAddress())
                 .setPassword(passwordEncoder.encode(input.getPassword()));
 
@@ -44,9 +43,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getEmail(),
-                        input.getPassword()
-                )
-        );
+                        input.getPassword()));
 
         return userRepository.findByEmail(input.getEmail())
                 .orElseThrow();

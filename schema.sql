@@ -5,7 +5,7 @@ CREATE DATABASE attendance_system;
 USE attendance_system;
 
 CREATE TABLE
-    User (
+    users (
         id BIGINT AUTO_INCREMENT,
         name VARCHAR(100),
         email VARCHAR(100),
@@ -13,14 +13,14 @@ CREATE TABLE
         address VARCHAR(255),
         password VARCHAR(255),
         role ENUM (
-            'USER',
-            'ADMIN',
-            'PARENT',
-            'STUDENT',
-            'TEACHER',
-            'TT_INCHARGE',
-            'SCHOOL_INCHARGE',
-            'GENERAL_MANAGER'
+            'ROLE_USER',
+            'ROLE_ADMIN',
+            'ROLE_PARENT',
+            'ROLE_STUDENT',
+            'ROLE_TEACHER',
+            'ROLE_TT_INCHARGE',
+            'ROLE_SCHOOL_INCHARGE',
+            'ROLE_GENERAL_MANAGER'
         ),
         PRIMARY KEY (id),
         UNIQUE (email),
@@ -30,14 +30,14 @@ CREATE TABLE
 CREATE TABLE
     parent (
         id BIGINT,
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE
     );
 
 CREATE TABLE
     student (
         id BIGINT,
         parent_id BIGINT,
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (parent_id) REFERENCES parent (id) ON DELETE SET NULL
     );
 
@@ -57,7 +57,7 @@ CREATE TABLE
     employee (
         id BIGINT,
         school_id BIGINT,
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE SET NULL
     );
 
@@ -75,7 +75,7 @@ CREATE TABLE
         id BIGINT,
         subject_id INT,
         position ENUM ('PRT', 'TGT', 'PGT'),
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE SET NULL
     );
 
