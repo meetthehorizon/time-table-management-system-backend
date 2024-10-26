@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dtos;
+package com.dbms.dbms_project_backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

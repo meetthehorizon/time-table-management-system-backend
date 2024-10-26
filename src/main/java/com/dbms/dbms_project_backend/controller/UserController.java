@@ -2,6 +2,7 @@ package com.dbms.dbms_project_backend.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,13 +17,10 @@ import com.dbms.dbms_project_backend.service.UserService;
 @RequestMapping("/users")
 @RestController
 public class UserController {
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping(value = { "/me", "/me/" })
+    @GetMapping("/me/edit")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -32,7 +30,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(value = { "", "/" })
+    @GetMapping("")
     public ResponseEntity<List<User>> allUsers() {
         List<User> users = userService.allUsers();
 

@@ -5,8 +5,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.dbms.dbms_project_backend.dtos.LoginUserDto;
-import com.dbms.dbms_project_backend.dtos.RegisterUserDto;
+import com.dbms.dbms_project_backend.dto.LoginUserDto;
+import com.dbms.dbms_project_backend.dto.RegisterUserDto;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRepository;

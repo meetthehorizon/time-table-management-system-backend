@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.dbms.dbms_project_backend.event.user_roles.UserRoleAddedEvent;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRolesRepository;
@@ -23,6 +25,9 @@ import jakarta.transaction.Transactional;
 public class UserRolesDao implements UserRolesRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     private static final Logger logger = LoggerFactory.getLogger(UserRolesDao.class);
 
@@ -36,6 +41,9 @@ public class UserRolesDao implements UserRolesRepository {
         } catch (DataIntegrityViolationException e) {
             logger.warn("[WARN] {}", e.getMessage());
         }
+
+        UserRoleAddedEvent event = new UserRoleAddedEvent(this, user, role);
+        eventPublisher.publishEvent(event);
 
         return user;
     }
