@@ -5,31 +5,51 @@ CREATE DATABASE attendance_system;
 USE attendance_system;
 
 CREATE TABLE
-    User (
+    users (
         id BIGINT AUTO_INCREMENT,
         name VARCHAR(100),
         email VARCHAR(100),
         phone CHAR(10),
         address VARCHAR(255),
         password VARCHAR(255),
-        role ENUM ('PARENT', 'STUDENT', 'TEACHER', 'EMPLOYEE'),
         PRIMARY KEY (id),
         UNIQUE (email),
         UNIQUE (phone)
     );
 
 CREATE TABLE
+    user_roles (
+        user_role_id BIGINT AUTO_INCREMENT,
+        user_id BIGINT,
+        role_name ENUM (
+            'ROLE_USER',
+            'ROLE_ADMIN',
+            'ROLE_PARENT',
+            'ROLE_STUDENT',
+            'ROLE_TEACHER',
+            'ROLE_TT_INCHARGE',
+            'ROLE_SCHOOL_INCHARGE',
+            'ROLE_GENERAL_MANAGER'
+        ) NOT NULL,
+        PRIMARY KEY (user_role_id),
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        UNIQUE (user_id, role_name)
+    );
+
+CREATE TABLE
     parent (
         id BIGINT,
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE
+        PRIMARY KEY (id),
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
     student (
         id BIGINT,
         parent_id BIGINT,
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
-        FOREIGN KEY (parent_id) REFERENCES parent (id) ON DELETE SET NULL
+        PRIMARY KEY (id),
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (parent_id) REFERENCES parent (id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -48,32 +68,9 @@ CREATE TABLE
     employee (
         id BIGINT,
         school_id BIGINT,
-        position ENUM (
-            'TT_INCHARGE',
-            'SCHOOL_INCHARGE',
-            'GENERAL_MANAGER'
-        ),
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
-        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE SET NULL
-    );
-
-CREATE TABLE
-    permissions (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        permission_name VARCHAR(50) NOT NULL UNIQUE,
-        description VARCHAR(255)
-    );
-
-CREATE TABLE
-    role_permissions (
-        position ENUM (
-            'TT_INCHARGE',
-            'SCHOOL_INCHARGE',
-            'GENERAL_MANAGER'
-        ) NOT NULL,
-        permission_id BIGINT NOT NULL,
-        FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE CASCADE,
-        PRIMARY KEY (position, permission_id)
+        PRIMARY KEY (id),
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -90,8 +87,9 @@ CREATE TABLE
         id BIGINT,
         subject_id INT,
         position ENUM ('PRT', 'TGT', 'PGT'),
-        FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE,
-        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE SET NULL
+        PRIMARY KEY (id),
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -102,9 +100,9 @@ CREATE TABLE
         subject_id INT,
         teacher_id BIGINT,
         PRIMARY KEY (id),
-        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE CASCADE,
-        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE,
-        FOREIGN KEY (teacher_id) REFERENCES teacher (id) ON DELETE SET NULL
+        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (teacher_id) REFERENCES teacher (id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -119,7 +117,7 @@ CREATE TABLE
         PRIMARY KEY (id),
         CHECK (class BETWEEN 1 AND 12),
         CHECK (attendance_criteria BETWEEN 0 AND 100),
-        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE
+        FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -131,9 +129,9 @@ CREATE TABLE
         class_teacher_id BIGINT,
         section CHAR(1),
         PRIMARY KEY (id),
-        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE CASCADE,
+        FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE CASCADE ON UPDATE CASCADE,
         CHECK (class BETWEEN 1 AND 12),
-        FOREIGN KEY (class_teacher_id) REFERENCES teacher (id) ON DELETE SET NULL,
+        FOREIGN KEY (class_teacher_id) REFERENCES teacher (id) ON DELETE SET NULL ON UPDATE CASCADE,
         UNIQUE (school_id, class, section, running_year)
     );
 
@@ -144,8 +142,8 @@ CREATE TABLE
         section_id BIGINT,
         enroll_year YEAR,
         PRIMARY KEY (id),
-        FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE,
-        FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE
+        FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -156,7 +154,7 @@ CREATE TABLE
         drive_link VARCHAR(100),
         curr_date DATE,
         PRIMARY KEY (id),
-        FOREIGN KEY (enroll_id) REFERENCES enrollment (id) ON DELETE CASCADE
+        FOREIGN KEY (enroll_id) REFERENCES enrollment (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -166,9 +164,9 @@ CREATE TABLE
         subject_req_id INT,
         teacher_req_id BIGINT,
         PRIMARY KEY (id),
-        FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE,
-        FOREIGN KEY (subject_req_id) REFERENCES subject_req (id) ON DELETE CASCADE,
-        FOREIGN KEY (teacher_req_id) REFERENCES teacher_req (id) ON DELETE SET NULL
+        FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (subject_req_id) REFERENCES subject_req (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (teacher_req_id) REFERENCES teacher_req (id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -179,7 +177,7 @@ CREATE TABLE
         end_time TIME,
         day ENUM ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'),
         PRIMARY KEY (id),
-        FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE CASCADE
+        FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -191,8 +189,8 @@ CREATE TABLE
         curr_date DATE,
         remark VARCHAR(100),
         PRIMARY KEY (id),
-        FOREIGN KEY (slot_id) REFERENCES slots (id) ON DELETE CASCADE,
-        FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
+        FOREIGN KEY (slot_id) REFERENCES slots (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-show tables;
+SHOW TABLES;
