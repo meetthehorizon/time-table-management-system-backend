@@ -100,6 +100,18 @@ public class UserDao implements UserRepository {
     }
 
     @Override
+    @Transactional
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        int rowsAffected = jdbcTemplate.update(sql, id);
+        if (rowsAffected > 0) {
+            logger.info("[INFO] User with id: {} deleted successfully.", id);
+        } else {
+            logger.warn("[WARN] No user found to delete with id: {}", id);
+        }
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try {
