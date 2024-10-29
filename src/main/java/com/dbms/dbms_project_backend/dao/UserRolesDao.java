@@ -2,7 +2,6 @@ package com.dbms.dbms_project_backend.dao;
 
 import java.util.Set;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.dbms.dbms_project_backend.event.user_roles.UserRoleAddedEvent;
+import com.dbms.dbms_project_backend.event.UserRoleAddedEvent;
+import com.dbms.dbms_project_backend.event.UserRoleRemovedEvent;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRolesRepository;
@@ -42,23 +42,9 @@ public class UserRolesDao implements UserRolesRepository {
             logger.warn("[WARN] {}", e.getMessage());
         }
 
-        UserRoleAddedEvent event = new UserRoleAddedEvent(this, user, role);
-        eventPublisher.publishEvent(event);
+        UserRoleAddedEvent userRoleAddedEvent = new UserRoleAddedEvent(this, user, role);
+        eventPublisher.publishEvent(userRoleAddedEvent);
 
-        return user;
-    }
-
-    @Override
-    @Transactional
-    public User setRolesByUser(User user) {
-        String sql = "INSERT INTO user_roles (user_id, role_name) VALUES (?, ?) ON DUPLICATE KEY UPDATE role_name = role_name";
-        List<Object[]> batchArgs = new ArrayList<>();
-
-        for (Role role : user.getRoles()) {
-            batchArgs.add(new Object[] { user.getId(), role.name() });
-        }
-
-        jdbcTemplate.batchUpdate(sql, batchArgs);
         return user;
     }
 
@@ -86,6 +72,10 @@ public class UserRolesDao implements UserRolesRepository {
         } catch (EmptyResultDataAccessException e) {
             logger.error("[ERROR]: {}", e.getMessage());
         }
+
+        UserRoleRemovedEvent userRoleRemovedEvent = new UserRoleRemovedEvent(this, user, role);
+        eventPublisher.publishEvent(userRoleRemovedEvent);
+
         return user;
     }
 }

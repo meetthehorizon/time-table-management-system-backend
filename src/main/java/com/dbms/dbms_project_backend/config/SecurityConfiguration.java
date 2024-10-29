@@ -14,6 +14,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
@@ -22,16 +24,20 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+
     public SecurityConfiguration(
             JwtAuthenticationFilter jwtAuthenticationFilter,
             AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        logger.info("[INFO] SecurityConfiguration initialized with JwtAuthenticationFilter and AuthenticationProvider");
     }
 
     @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        logger.debug("[DEBUG] Configuring HttpSecurity");
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
@@ -46,11 +52,13 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        logger.info("[INFO] SecurityFilterChain configured successfully");
         return http.build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        logger.debug("[DEBUG] Configuring CORS");
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of("http://localhost:8005"));
@@ -61,6 +69,7 @@ public class SecurityConfiguration {
 
         source.registerCorsConfiguration("/**", configuration);
 
+        logger.info("[INFO] CORS configuration set up successfully");
         return source;
     }
 }

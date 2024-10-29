@@ -72,19 +72,20 @@ public class UserDao implements UserRepository {
     @Transactional
     public User save(User user) {
         String sql = "INSERT INTO users (name, email, phone, address, password) VALUES (?, ?, ?, ?, ?)";
-
-        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(),
-                user.getAddress(), user.getPassword());
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(), user.getAddress(),
+                user.getPassword());
 
         Long newUserId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
-
         if (newUserId != null) {
             user.setId(newUserId);
         } else {
             user = findByEmail(user.getEmail()).orElse(null);
         }
 
-        user = userRolesRepository.setRolesByUser(user);
+        for (Role role : user.getRoles()) {
+            userRolesRepository.addRoleByUser(user, role);
+        }
+
         return user;
     }
 
