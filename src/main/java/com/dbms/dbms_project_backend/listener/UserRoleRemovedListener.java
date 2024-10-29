@@ -33,7 +33,5 @@ public class UserRoleRemovedListener implements ApplicationListener<UserRoleRemo
             String sql = "DELETE FROM student WHERE user_id = ?";
             jdbcTemplate.update(sql, userId);
         }
-
     }
-
 }

@@ -27,6 +27,7 @@ CREATE TABLE
             'ROLE_PARENT',
             'ROLE_STUDENT',
             'ROLE_TEACHER',
+            'ROLE_EMPLOYEE',
             'ROLE_TT_INCHARGE',
             'ROLE_SCHOOL_INCHARGE',
             'ROLE_GENERAL_MANAGER'
@@ -56,7 +57,6 @@ CREATE TABLE
     school (
         id BIGINT AUTO_INCREMENT,
         name VARCHAR(255),
-        parent_id BIGINT,
         address VARCHAR(255),
         phone CHAR(10),
         email VARCHAR(100),
