@@ -126,4 +126,14 @@ public class UserDao implements UserRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public List<User> findUsersByRole(Role role) {
+        String sql = "SELECT u.* FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id WHERE ur.role = ?";
+        List<User> users = jdbcTemplate.query(sql, rowMapper, role.name());
+        for (User user : users) {
+            user.setRoles(userRolesRepository.getRolesByUser(user));
+        }
+        return users;
+    }
 }

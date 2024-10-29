@@ -113,4 +113,29 @@ public class UserController {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
+        logger.info("[INFO] Fetching users with role: {}", role);
+        
+        // Convert the string role to the Role enum
+        Role userRole;
+        try {
+            userRole = Role.valueOf(role.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            logger.warn("[WARN] Invalid role: {}", role);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400 Bad Request
+        }
+
+        List<User> users = userService.findUsersByRole(userRole);
+        if (users.isEmpty()) {
+            logger.warn("[WARN] No users found with role: {}", userRole);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(users);
+    }
+
+
+    
 }
