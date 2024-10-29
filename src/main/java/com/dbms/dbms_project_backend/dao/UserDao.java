@@ -92,7 +92,7 @@ public class UserDao implements UserRepository {
     @Override
     @Transactional
     public User update(User user) {
-        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, WHERE id = ?";
+        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(),
                 user.getAddress(), user.getId());
 

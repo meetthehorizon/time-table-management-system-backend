@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.dbms.dbms_project_backend.dto.AddRoleDto;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.service.UserRolesService;
@@ -22,11 +23,11 @@ public class UserRolesController {
     private static final Logger logger = LoggerFactory.getLogger(UserRolesController.class);
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add/{userId}/{roleName}")
-    public ResponseEntity<User> addRole(@PathVariable Long userId, @PathVariable String roleName) {
-        logger.info("[INFO] Adding role '{}' to user with ID {}", roleName, userId);
-        User user = userRolesService.addRoleToUser(userId, roleName);
-        logger.debug("[DEBUG] Role '{}' added to user with ID {}", roleName, userId);
+    @PostMapping("/add")
+    public ResponseEntity<User> addRole(@RequestBody AddRoleDto addRoleDto) {
+        logger.info("[INFO] Adding role '{}' to user with ID {}", addRoleDto.getRoleName(), addRoleDto.getId());
+        User user = userRolesService.addRoleToUser(addRoleDto.getId(), addRoleDto.getRoleName());
+        logger.debug("[DEBUG] Role '{}' added to user with ID {}", addRoleDto.getRoleName(), addRoleDto.getId());
         return ResponseEntity.ok(user);
     }
 
