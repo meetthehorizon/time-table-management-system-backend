@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dbms.dbms_project_backend.dto.RegisterUserDto;
 import com.dbms.dbms_project_backend.model.User;
+import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,4 +89,10 @@ public class UserService {
         }
         return user;
     }
+
+    public List<User> findUsersByRole(Role role) {
+        logger.debug("[DEBUG] Fetching users with role: {}", role);
+        return userRepository.findUsersByRole(role);
+    }
+
 }
