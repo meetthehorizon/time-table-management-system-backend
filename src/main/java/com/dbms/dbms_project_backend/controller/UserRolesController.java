@@ -1,6 +1,5 @@
 package com.dbms.dbms_project_backend.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +24,5 @@ public class UserRolesController {
 
         return ResponseEntity.ok(user);
     }
-
-    
 
 }

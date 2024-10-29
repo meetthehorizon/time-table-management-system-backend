@@ -31,8 +31,15 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<User>> allUsers() {
-        List<User> users = userService.allUsers();
+        List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> userOpt = userService.findById(id);
+        return userOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -42,54 +49,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> userOpt = userService.findById(id);
-        return userOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-  
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
     @PutMapping("/edit/{id}")
     public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody User updatedUser) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
-        if (currentUser.getRoles().contains(Role.ROLE_ADMIN)) {
-            Optional<User> existingUserOpt = userService.findById(id);
-            if (!existingUserOpt.isPresent()) {
-                return ResponseEntity.notFound().build(); 
-            }
-
-            User existingUser = existingUserOpt.get();
-            existingUser.setName(updatedUser.getName());
-            existingUser.setAddress(updatedUser.getAddress());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setPhone(updatedUser.getPhone());
-            existingUser.setRoles(updatedUser.getRoles()); 
-
-            userService.saveUser(existingUser);
-            return ResponseEntity.ok(existingUser);
-        } else {
-            if (!currentUser.getId().equals(id)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); 
-            }
-
-            Optional<User> existingUserOpt = userService.findById(id);
-            if (!existingUserOpt.isPresent()) {
-                return ResponseEntity.notFound().build(); 
-            }
-
-            User existingUser = existingUserOpt.get();
-            existingUser.setName(updatedUser.getName());
-            existingUser.setAddress(updatedUser.getAddress());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setPhone(updatedUser.getPhone());
-
-            userService.saveUser(existingUser);
-            return ResponseEntity.ok(existingUser);
+        if (!currentUser.getRoles().contains(Role.ROLE_ADMIN) && !currentUser.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+        Optional<User> existingUserOpt = userService.findById(id);
+        if (!existingUserOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User existingUser = existingUserOpt.get();
+        existingUser.setName(updatedUser.getName());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhone(updatedUser.getPhone());
+
+        userService.updateUser(existingUser);
+        return ResponseEntity.ok(existingUser);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

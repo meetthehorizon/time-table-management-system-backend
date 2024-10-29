@@ -47,12 +47,11 @@ public class UserDao implements UserRepository {
     public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try {
-            User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
-            if (user != null) {
-                Set<Role> roles = userRolesRepository.getRolesByUser(user);
-                user.setRoles(roles);
-            }
-            return Optional.ofNullable(user);
+            User user = Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id))
+                    .orElseThrow(() -> new EmptyResultDataAccessException("No user found with id: " + id, 1));
+            Set<Role> roles = userRolesRepository.getRolesByUser(user);
+            user.setRoles(roles);
+            return Optional.of(user);
         } catch (EmptyResultDataAccessException e) {
             logger.warn("[WARN] No user found with id: {}", id);
             return Optional.empty();
@@ -92,9 +91,9 @@ public class UserDao implements UserRepository {
     @Override
     @Transactional
     public User update(User user) {
-        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, WHERE id = ?";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(),
-                user.getAddress(), user.getPassword(), user.getId());
+                user.getAddress(), user.getId());
 
         return user;
     }
