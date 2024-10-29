@@ -23,19 +23,27 @@ public class UserRoleAddedListener implements ApplicationListener<UserRoleAddedE
     @Override
     @Transactional
     public void onApplicationEvent(UserRoleAddedEvent event) {
-        logger.info("[INFO] User role added event received: " + event.getUser().getUsername() + " "
-                + event.getRole().name());
         Long userId = event.getUser().getId();
+        logger.info("[INFO] User role added event received: (" + userId + ") " + event.getUser().getUsername() + " "
+                + event.getRole().name());
 
         if (event.getRole() == Role.ROLE_STUDENT) {
-            String sql = "INSERT INTO student (user_id) VALUES (?)";
+            logger.debug("[DEBUG] Adding student record for user with ID {}", userId);
+            String sql = "INSERT INTO student (id) VALUES (?)";
             jdbcTemplate.update(sql, userId);
         } else if (event.getRole() == Role.ROLE_EMPLOYEE) {
-            String sql = "INSERT INTO employee (user_id) VALUES (?)";
-            jdbcTemplate.update(sql, userId);
-        } else if (event.getRole() == Role.ROLE_STUDENT) {
-            String sql = "INSERT INTO student (user_id) VALUES (?)";
-            jdbcTemplate.update(sql, userId);
+            logger.debug("[DEBUG] Adding employee record for user with ID {}", userId);
+            try {
+                String sql = "INSERT INTO employee (id) VALUES (?)";
+                jdbcTemplate.update(sql, userId);
+            } catch (Exception e) {
+                logger.warn("[WARN] Data integrity violation while adding employee record for user with ID {}: {}",
+                        userId,
+                        e.getMessage());
+            }
         }
+
+        logger.info("[INFO] User role added event processed: (" + userId + ") " + event.getUser().getUsername() + " "
+                + event.getRole().name());
     }
 }

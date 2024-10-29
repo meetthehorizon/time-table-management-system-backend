@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.Set;
@@ -13,6 +14,8 @@ import java.util.HashSet;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@ToString
 public class User implements UserDetails {
     private Long id;
     private String name;
@@ -30,6 +34,8 @@ public class User implements UserDetails {
     private String address;
     private String password;
     private Set<Role> roles = new HashSet<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,20 +70,22 @@ public class User implements UserDetails {
     }
 
     public User addRole(Role role) {
-        this.roles.add(role);
+        Set<Role> mutableRoles = new HashSet<>(this.roles);
+        mutableRoles.add(role);
+        this.roles = mutableRoles;
+
         return this;
     }
 
     public User deleteRole(Role role) {
-        this.roles.remove(role);
-        return this;
-    }
-
-    public User setRoles(Set<Role> roles) {
-        this.roles = roles;
-        if (roles.isEmpty()) {
-            this.roles.add(Role.ROLE_USER);
+        if (roles.contains(role)) {
+            Set<Role> mutableRoles = new HashSet<>(this.roles);
+            mutableRoles.remove(role);
+            this.roles = mutableRoles;
+            return this;
+        } else {
+            logger.warn("[WARN] Role {} not found for user {}", role, this.id);
+            return this;
         }
-        return this;
     }
 }

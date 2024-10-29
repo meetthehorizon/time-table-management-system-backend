@@ -34,7 +34,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<User>> allUsers() {
         logger.info("[INFO] Fetching all users");
         List<User> users = userService.findAll();
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<User> createUser(@RequestBody User user) {
         logger.info("[INFO] Creating new user with email: {}", user.getEmail());
         User createdUser = userService.createUser(user);
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody User updatedUser) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
@@ -91,7 +91,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
@@ -114,28 +114,6 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/role/{role}")
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
-        logger.info("[INFO] Fetching users with role: {}", role);
-        
-        // Convert the string role to the Role enum
-        Role userRole;
-        try {
-            userRole = Role.valueOf(role.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.warn("[WARN] Invalid role: {}", role);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400 Bad Request
-        }
-
-        List<User> users = userService.findUsersByRole(userRole);
-        if (users.isEmpty()) {
-            logger.warn("[WARN] No users found with role: {}", userRole);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(users);
-    }
-
-
     
+
 }

@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.dbms.dbms_project_backend.dto.AddRoleDto;
+import com.dbms.dbms_project_backend.dto.userRoles.AddRoleDto;
+import com.dbms.dbms_project_backend.dto.userRoles.DeleteUserDto;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.service.UserRolesService;
@@ -23,7 +24,7 @@ public class UserRolesController {
     private static final Logger logger = LoggerFactory.getLogger(UserRolesController.class);
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<User> addRole(@RequestBody AddRoleDto addRoleDto) {
         logger.info("[INFO] Adding role '{}' to user with ID {}", addRoleDto.getRoleName(), addRoleDto.getId());
         User user = userRolesService.addRoleToUser(addRoleDto.getId(), addRoleDto.getRoleName());
@@ -31,17 +32,8 @@ public class UserRolesController {
         return ResponseEntity.ok(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/set/{userId}")
-    public ResponseEntity<User> setRoles(@PathVariable Long userId, @RequestBody Set<String> roles) {
-        logger.info("[INFO] Setting roles for user with ID {}", userId);
-        User user = userRolesService.setRolesForUser(userId, roles);
-        logger.debug("[INFO] Roles set for user with ID {}: {}", userId, roles);
-        return ResponseEntity.ok(user);
-    }
-
     @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
-    @GetMapping("/get/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<Set<Role>> getRoles(@PathVariable Long userId) {
         logger.info("[INFO] Fetching roles for user with ID {}", userId);
         Set<Role> roles = userRolesService.getRolesForUser(userId);
@@ -50,11 +42,14 @@ public class UserRolesController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete/{userId}/{roleName}")
-    public ResponseEntity<User> deleteRole(@PathVariable Long userId, @PathVariable String roleName) {
-        logger.warn("[WARN] Deleting role '{}' from user with ID {}", roleName, userId);
-        User user = userRolesService.deleteRoleFromUser(userId, roleName);
-        logger.debug("[DEBUG] Role '{}' deleted from user with ID {}", roleName, userId);
+    @DeleteMapping()
+    public ResponseEntity<User> deleteRole(@RequestBody DeleteUserDto deleteUserDto) {
+        logger.warn("[WARN] Deleting role '{}' from user with ID {}", deleteUserDto.getRoleName(),
+                deleteUserDto.getId());
+        User user = userRolesService.deleteRoleFromUser(deleteUserDto.getId(), deleteUserDto.getRoleName());
+        logger.debug("[DEBUG] Role '{}' deleted from user with ID {}", deleteUserDto.getRoleName(),
+                deleteUserDto.getId());
         return ResponseEntity.ok(user);
     }
+
 }
