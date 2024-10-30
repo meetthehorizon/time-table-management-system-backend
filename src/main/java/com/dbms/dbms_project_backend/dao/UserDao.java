@@ -126,4 +126,16 @@ public class UserDao implements UserRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, email) > 0;
+    }
+
+    @Override
+    public boolean existsByPhone(String phone) {
+        String sql = "SELECT COUNT(*) FROM users WHERE phone = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, phone) > 0;
+    }
 }

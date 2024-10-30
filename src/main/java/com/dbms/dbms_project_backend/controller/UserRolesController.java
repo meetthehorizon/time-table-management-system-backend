@@ -51,5 +51,4 @@ public class UserRolesController {
                 deleteUserDto.getId());
         return ResponseEntity.ok(user);
     }
-
 }

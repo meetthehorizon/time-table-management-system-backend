@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dbms.dbms_project_backend.dto.authentication.LoginUserDto;
 import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
 import com.dbms.dbms_project_backend.model.User;
-import com.dbms.dbms_project_backend.response.LoginResponse;
+import com.dbms.dbms_project_backend.response.authentication.LoginResponse;
+import com.dbms.dbms_project_backend.response.authentication.RegisterResponse;
 import com.dbms.dbms_project_backend.service.AuthenticationService;
 import com.dbms.dbms_project_backend.service.JwtService;
+
+import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +32,13 @@ public class AuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
         logger.info("[INFO] Registering user with email: {}", registerUserDto.getEmail());
         User registeredUser = authenticationService.signup(registerUserDto);
-        logger.debug("[DEBUG] User registered successfully: {}", registeredUser);
-        return ResponseEntity.ok(registeredUser);
+        RegisterResponse registerResponse = new RegisterResponse().setUser(registeredUser);
+        logger.info("[INFO] User registered successfully with email: {}", registerUserDto.getEmail());
+
+        return ResponseEntity.ok(registerResponse);
     }
 
     @PostMapping("/login")

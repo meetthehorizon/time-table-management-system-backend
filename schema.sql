@@ -6,20 +6,16 @@ USE attendance_system;
 
 CREATE TABLE
     users (
-        id BIGINT AUTO_INCREMENT,
-        name VARCHAR(100),
-        email VARCHAR(100),
-        phone CHAR(10),
-        address VARCHAR(255),
-        password VARCHAR(255),
-        PRIMARY KEY (id),
-        UNIQUE (email),
-        UNIQUE (phone)
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        phone CHAR(10) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        address VARCHAR(255) NOT NULL,
     );
 
 CREATE TABLE
     user_roles (
-        user_role_id BIGINT AUTO_INCREMENT,
         user_id BIGINT,
         role_name ENUM (
             'ROLE_USER',
@@ -32,9 +28,8 @@ CREATE TABLE
             'ROLE_SCHOOL_INCHARGE',
             'ROLE_GENERAL_MANAGER'
         ) NOT NULL,
-        PRIMARY KEY (user_role_id),
+        PRIMARY KEY (user_id, role_name),
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        UNIQUE (user_id, role_name)
     );
 
 CREATE TABLE
