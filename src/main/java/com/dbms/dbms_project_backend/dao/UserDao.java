@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -46,16 +45,10 @@ public class UserDao implements UserRepository {
     @Override
     public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
-        try {
-            User user = Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id))
-                    .orElseThrow(() -> new EmptyResultDataAccessException("No user found with id: " + id, 1));
-            Set<Role> roles = userRolesRepository.getRolesByUser(user);
-            user.setRoles(roles);
-            return Optional.of(user);
-        } catch (EmptyResultDataAccessException e) {
-            logger.warn("[WARN] No user found with id: {}", id);
-            return Optional.empty();
-        }
+        User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        Set<Role> roles = userRolesRepository.getRolesByUser(user);
+        user.setRoles(roles);
+        return Optional.of(user);
     }
 
     @Override
@@ -93,8 +86,7 @@ public class UserDao implements UserRepository {
     @Transactional
     public User update(User user) {
         String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
-        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(),
-                user.getAddress(), user.getId());
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), user.getId());
 
         return user;
     }
@@ -114,17 +106,12 @@ public class UserDao implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        try {
-            User user = jdbcTemplate.queryForObject(sql, rowMapper, email);
-            if (user != null) {
-                Set<Role> roles = userRolesRepository.getRolesByUser(user);
-                user.setRoles(roles);
-            }
-            return Optional.ofNullable(user);
-        } catch (EmptyResultDataAccessException e) {
-            logger.warn("[WARN] No user found with email: {}", email);
-            return Optional.empty();
+        User user = jdbcTemplate.queryForObject(sql, rowMapper, email);
+        if (user != null) {
+            Set<Role> roles = userRolesRepository.getRolesByUser(user);
+            user.setRoles(roles);
         }
+        return Optional.ofNullable(user);
     }
 
     @Override

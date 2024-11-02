@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
+import com.dbms.dbms_project_backend.exception.user.UserNotFoundException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -28,15 +29,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         logger.debug("[DEBUG] Fetching user with id: {}", id);
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             logger.info("[INFO] User found with id: {}", id);
+            return user.get();
         } else {
             logger.warn("[WARN] User not found with id: {}", id);
+            throw new UserNotFoundException(id);
         }
-        return user;
     }
 
     public User createUser(User user) {
@@ -48,12 +50,8 @@ public class UserService {
         registerUserDto.setAddress(user.getAddress());
         registerUserDto.setPassword(user.getPassword());
 
-        try {
-            user = authenticationService.signup(registerUserDto);
-            logger.info("[INFO] User created with email: {}", user.getEmail());
-        } catch (Exception e) {
-            logger.error("Error creating user with email: {}", user.getEmail(), e);
-        }
+        user = authenticationService.signup(registerUserDto);
+
         return user;
     }
 

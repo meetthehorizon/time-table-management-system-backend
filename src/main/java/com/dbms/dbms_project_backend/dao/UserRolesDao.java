@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,16 +33,11 @@ public class UserRolesDao implements UserRolesRepository {
     @Transactional
     public User addRoleByUser(User user, Role role) {
         String sql = "INSERT INTO user_roles (user_id, role_name) VALUES (?, ?)";
-        try {
-            Object[] params = { user.getId(), role.name() };
-            logger.debug("[DEBUG] Adding role {} to user {}", role, user.getId());
-            jdbcTemplate.update(sql, params);
+        Object[] params = { user.getId(), role.name() };
+        logger.debug("[DEBUG] Adding role {} to user {}", role, user.getId());
+        jdbcTemplate.update(sql, params);
 
-            logger.info("[INFO] Role {} added to user {}", role, user.getId());
-        } catch (Exception e) {
-            logger.warn("[WARN] Data integrity violation while adding role {} to user {}: {}", role, user.getId(),
-                    e.getMessage());
-        }
+        logger.info("[INFO] Role {} added to user {}", role, user.getId());
 
         logger.debug("[DEBUG] Published UserRoleAddedEvent for user {} and role {}", user.getId(), role);
         UserRoleAddedEvent userRoleAddedEvent = new UserRoleAddedEvent(this, user, role);
@@ -55,30 +49,21 @@ public class UserRolesDao implements UserRolesRepository {
     @Override
     public Set<Role> getRolesByUser(User user) {
         String sql = "SELECT role_name FROM user_roles WHERE user_id = ?";
-        try {
-            logger.debug("[DEBUG] Fetching roles for user {}", user.getId());
-            List<Role> roles = jdbcTemplate.query(sql, (rs, rowNum) -> Role.valueOf(rs.getString("role_name")),
-                    user.getId());
-            logger.info("[INFO] Roles fetched for user {}: {}", user.getId(), roles);
-            return Set.copyOf(roles);
-        } catch (EmptyResultDataAccessException e) {
-            logger.warn("[WARN] No roles found for user {}: {}", user.getId(), e.getMessage());
-            return Set.of();
-        }
+        logger.debug("[DEBUG] Fetching roles for user {}", user.getId());
+        List<Role> roles = jdbcTemplate.query(sql, (rs, rowNum) -> Role.valueOf(rs.getString("role_name")),
+                user.getId());
+        logger.info("[INFO] Roles fetched for user {}: {}", user.getId(), roles);
+        return Set.copyOf(roles);
     }
 
     @Override
     @Transactional
     public User deleteRoleByUser(User user, Role role) {
         String sql = "DELETE FROM user_roles WHERE user_id = ? AND role_name = ?";
-        try {
-            logger.debug("[DEBUG] Deleting role {} from user {}", role, user.getId());
-            jdbcTemplate.update(sql, user.getId(), role.name());
-            user = user.deleteRole(role);
-            logger.info("[INFO] Role {} deleted from user {}", role, user.getId());
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("[ERROR] Error deleting role {} from user {}: {}", role, user.getId(), e.getMessage());
-        }
+        logger.debug("[DEBUG] Deleting role {} from user {}", role, user.getId());
+        jdbcTemplate.update(sql, user.getId(), role.name());
+        user = user.deleteRole(role);
+        logger.info("[INFO] Role {} deleted from user {}", role, user.getId());
 
         logger.debug("[DEBUG] Published UserRoleRemovedEvent for user {} and role {}", user.getId(), role);
         UserRoleRemovedEvent userRoleRemovedEvent = new UserRoleRemovedEvent(this, user, role);

@@ -50,7 +50,7 @@ public class AuthenticationController {
         String jwtToken = jwtService.generateToken(authenticatedUser);
         logger.debug("[DEBUG] JWT token generated: {}", jwtToken);
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime());
+                .setExpiresIn(jwtService.getExpirationTime()).setSuccess(true);
 
         logger.info("[INFO] User logged in successfully with email: {}", loginUserDto.getEmail());
         return ResponseEntity.ok(loginResponse);
