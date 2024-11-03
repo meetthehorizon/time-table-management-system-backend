@@ -40,6 +40,8 @@ public class SecurityConfiguration {
         logger.debug("[DEBUG] Configuring HttpSecurity");
         http.csrf()
                 .disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**")
                 .permitAll()
@@ -61,9 +63,11 @@ public class SecurityConfiguration {
         logger.debug("[DEBUG] Configuring CORS");
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:8005"));
-        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST","PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Access-Control-Allow-Origin");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
