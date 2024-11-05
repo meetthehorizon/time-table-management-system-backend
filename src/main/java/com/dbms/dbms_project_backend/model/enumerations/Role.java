@@ -19,12 +19,12 @@ public enum Role {
 
     private static final Logger logger = LoggerFactory.getLogger(Role.class);
 
-    public static Role fromString(String role) {
+    public static Role fromString(String roleStr) {
         try {
-            return Role.valueOf(role);
+            return Role.valueOf(roleStr);
         } catch (NotFoundException e) {
-            logger.warn("[WARN] Role {} not found", role);
-            throw new NotFoundException("Role", "roleName", role);
+            logger.warn("[WARN] Role {} not found", roleStr);
+            throw new NotFoundException("Role", "roleName", roleStr);
         }
     }
 }

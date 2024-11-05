@@ -6,15 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.dbms.dbms_project_backend.model.enumerations.Position;
+
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
-public class School {
+public class Teacher {
     public Long id;
-    public String name;
-    public String address;
-    public String phone;
-    public String email;
+    public User user;
+    public Position Position;
+    public Long subjectId;
+    public Long schoolId; // TODO - add schoolId
 }
