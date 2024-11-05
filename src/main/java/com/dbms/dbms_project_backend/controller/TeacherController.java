@@ -66,5 +66,4 @@ public class TeacherController {
         Teacher updatedTeacher = teacherService.update(existingTeacher);
         return ResponseEntity.ok(updatedTeacher);
     }
-
 }

@@ -31,21 +31,21 @@ public class SchoolDao implements SchoolRepository {
 
     @Override
     public List<School> findAll() {
-        String sql = "SELECT * FROM schools";
+        String sql = "SELECT * FROM school";
         List<School> schools = jdbcTemplate.query(sql, rowMapper);
         return schools;
     }
 
     @Override
     public Optional<School> findById(Long id) {
-        String sql = "SELECT * FROM schools WHERE id = ?";
+        String sql = "SELECT * FROM school WHERE id = ?";
         School school = jdbcTemplate.queryForObject(sql, rowMapper, id);
         return Optional.of(school);
     }
 
     @Override
     public School save(School school) {
-        String sql = "INSERT INTO schools (name, address, phone, email) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO school (name, address, phone, email) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, school.getName(), school.getAddress(), school.getPhone(), school.getEmail());
         Long schoolId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
 
@@ -55,7 +55,7 @@ public class SchoolDao implements SchoolRepository {
 
     @Override
     public School update(School school) {
-        String sql = "UPDATE schools SET name = ?, address = ?, phone = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE school SET name = ?, address = ?, phone = ?, email = ? WHERE id = ?";
         jdbcTemplate.update(sql, school.getName(), school.getAddress(), school.getPhone(), school.getEmail(),
                 school.getId());
         return findById(school.getId()).get();
