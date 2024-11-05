@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
+import com.dbms.dbms_project_backend.dto.authentication.UpdateUserDto;
 import com.dbms.dbms_project_backend.exception.UserDeleteThemselveException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
@@ -67,7 +67,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody RegisterUserDto updatedUser) {
+    public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody UpdateUserDto updatedUser) {
         logService.logRequestAndUser("/users/{id}", "PUT");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

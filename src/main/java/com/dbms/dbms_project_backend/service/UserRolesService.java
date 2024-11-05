@@ -1,5 +1,6 @@
 package com.dbms.dbms_project_backend.service;
 
+import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRolesRepository;
@@ -45,6 +46,10 @@ public class UserRolesService {
         logger.info("[INFO] Attempting to delete Role: {} from User with id: {}", roleStr, userId);
         User user = userService.findById(userId);
         Role role = Role.fromString(roleStr);
+
+        if (!user.getRoles().contains(role)) {
+            throw new NotFoundException("User", "roleName", roleStr);
+        }
 
         user = userRolesRepository.deleteRoleByUser(user, role);
         logger.debug("[DEBUG] Role: {} deleted from User with id: {}", roleStr, userId);

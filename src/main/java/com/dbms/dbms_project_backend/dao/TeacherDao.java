@@ -1,6 +1,7 @@
 package com.dbms.dbms_project_backend.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,6 +38,11 @@ public class TeacherDao implements TeacherRepository {
         });
 
         return teachers;
+    }
+
+    @Override
+    public Optional<Teacher> findById(Long id) {
+        return Optional.of(new Teacher());
     }
 
 }

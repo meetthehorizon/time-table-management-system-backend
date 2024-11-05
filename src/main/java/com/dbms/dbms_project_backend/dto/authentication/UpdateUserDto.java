@@ -1,18 +1,18 @@
 package com.dbms.dbms_project_backend.dto.authentication;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterUserDto {
+public class UpdateUserDto {
     @Size(min = 3, message = "Name must be at least 3 characters long")
     @NotNull(message = "Name can not be empty")
     private String name;
@@ -27,9 +27,4 @@ public class RegisterUserDto {
 
     @NotNull(message = "Address can not be empty")
     private String address;
-
-    @NotNull(message = "Password can not be empty")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one digit, one uppercase letter, one lowercase letter, and one special character")
-    private String password;
 }

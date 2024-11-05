@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.school.AddSchoolDto;
+import com.dbms.dbms_project_backend.dto.school.SchoolDto;
 import com.dbms.dbms_project_backend.model.School;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SchoolService;
@@ -51,7 +51,7 @@ public class SchoolController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
-    public ResponseEntity<School> addSchool(@RequestBody AddSchoolDto addSchoolDto) {
+    public ResponseEntity<School> addSchool(@RequestBody SchoolDto addSchoolDto) {
         logService.logRequestAndUser("/school", "POST");
 
         School school = new School();
@@ -64,7 +64,7 @@ public class SchoolController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<School> editSchool(@PathVariable Long id, @RequestBody School updatedSchool) {
+    public ResponseEntity<School> editSchool(@PathVariable Long id, @RequestBody SchoolDto updatedSchool) {
         logService.logRequestAndUser("/school/{id}", "POST");
 
         School existingSchool = schoolService.findById(id);
