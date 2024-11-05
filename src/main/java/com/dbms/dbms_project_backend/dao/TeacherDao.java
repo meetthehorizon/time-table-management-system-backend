@@ -42,7 +42,22 @@ public class TeacherDao implements TeacherRepository {
 
     @Override
     public Optional<Teacher> findById(Long id) {
-        return Optional.of(new Teacher());
+        String sql = "SELECT * FROM teachers WHERE id = ?";
+        Teacher teacher = jdbcTemplate.queryForObject(sql, teacherRowMapper, id);
+
+        if (teacher != null) {
+            teacher.setUser(userDao.findById(teacher.getId()).get());
+        }
+        return Optional.of(teacher);
+    }
+
+    @Override
+    public Teacher update(Teacher existingTeacher) {
+        String sql = "UPDATE teachers SET subject_id = ?, position = ? WHERE id = ?";
+        jdbcTemplate.update(sql, existingTeacher.getSubjectId(), existingTeacher.getPosition().toString(),
+                existingTeacher.getId());
+
+        return existingTeacher;
     }
 
 }

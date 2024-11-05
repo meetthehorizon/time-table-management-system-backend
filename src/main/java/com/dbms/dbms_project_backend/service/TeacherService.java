@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.Teacher;
 import com.dbms.dbms_project_backend.repository.TeacherRepository;
 
@@ -27,9 +28,17 @@ public class TeacherService {
 
     public Teacher findById(Long id) {
         logger.info("[INFO] Fetching Teacher with id: {}", id);
-        // Teacher teacher = teacherRepository.findById(id).orElseThrow(new NotFoundException("Teacher", "id", id))
+        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new NotFoundException("Teacher", "id", id));
 
-        return new Teacher();
+        logger.debug("[DEBUG] Fetched Teacher with id: {}", id);
+        return teacher;
     }
 
+    public Teacher update(Teacher existingTeacher) {
+        logger.info("[INFO] Updating Teacher with id: {}", existingTeacher.getId());
+        Teacher updatedTeacher = teacherRepository.update(existingTeacher);
+
+        logger.debug("[DEBUG] Updated Teacher with id: {}", existingTeacher.getId());
+        return updatedTeacher;
+    }
 }

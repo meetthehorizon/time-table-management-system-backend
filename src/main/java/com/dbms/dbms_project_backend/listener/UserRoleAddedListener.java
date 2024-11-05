@@ -33,14 +33,12 @@ public class UserRoleAddedListener implements ApplicationListener<UserRoleAddedE
             jdbcTemplate.update(sql, userId);
         } else if (event.getRole() == Role.ROLE_EMPLOYEE) {
             logger.debug("[DEBUG] Adding employee record for user with ID {}", userId);
-            try {
-                String sql = "INSERT INTO employee (id) VALUES (?)";
-                jdbcTemplate.update(sql, userId);
-            } catch (Exception e) {
-                logger.warn("[WARN] Data integrity violation while adding employee record for user with ID {}: {}",
-                        userId,
-                        e.getMessage());
-            }
+            String sql = "INSERT INTO employee (id) VALUES (?)";
+            jdbcTemplate.update(sql, userId);
+        } else if (event.getRole() == Role.ROLE_TEACHER) {
+            logger.debug("[DEBUG] Adding teacher record for user with ID {}", userId);
+            String sql = "INSERT INTO teacher (id) VALUES (?)";
+            jdbcTemplate.update(sql, userId);
         }
 
         logger.info("[INFO] User role added event processed: (" + userId + ") " + event.getUser().getUsername() + " "

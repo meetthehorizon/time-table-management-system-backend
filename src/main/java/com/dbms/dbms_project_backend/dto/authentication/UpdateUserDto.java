@@ -17,7 +17,7 @@ public class UpdateUserDto {
     @NotNull(message = "Name can not be empty")
     private String name;
 
-    @Pattern(regexp = "^[\\w.+\\-]+@xyz\\.com$", message = "Email must end with @iitbhu.ac.in")
+    @Pattern(regexp = "^[\\w.+\\-]+@iitbhu\\.ac\\.in$", message = "Email must end with @iitbhu.ac.in")
     @NotNull(message = "Email can not be empty")
     private String email;
 

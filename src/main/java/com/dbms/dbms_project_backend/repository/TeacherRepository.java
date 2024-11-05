@@ -9,4 +9,6 @@ public interface TeacherRepository {
     public List<Teacher> findAll();
 
     public Optional<Teacher> findById(Long id);
+
+    public Teacher update(Teacher existingTeacher);
 }
