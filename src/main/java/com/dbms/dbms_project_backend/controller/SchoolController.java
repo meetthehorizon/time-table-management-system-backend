@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dbms.dbms_project_backend.dto.school.SchoolDto;
 import com.dbms.dbms_project_backend.model.School;
+// import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SchoolService;
 
@@ -49,6 +50,16 @@ public class SchoolController {
         return ResponseEntity.ok(school);
     }
 
+    // @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or
+    // hasRole('ROLE_SCHOOL_INCHARGE')")
+    // @GetMapping("/{id}/users")
+    // public ResponseEntity<List<User>> findUsersBySchoolId(@PathVariable Long id)
+    // {
+    // logService.logRequestAndUser("/school/{id}/users", "GET");
+
+    // List<User> users = schoolService.findUsersBySchoolId(id);
+    // }
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
     public ResponseEntity<School> addSchool(@RequestBody SchoolDto addSchoolDto) {
@@ -58,7 +69,7 @@ public class SchoolController {
         school.setName(addSchoolDto.getName()).setAddress(addSchoolDto.getAddress()).setPhone(addSchoolDto.getPhone())
                 .setEmail(addSchoolDto.getEmail());
 
-        school = schoolService.addSchool(school);
+        school = schoolService.add(school);
         return ResponseEntity.ok(school);
     }
 
@@ -72,7 +83,7 @@ public class SchoolController {
         existingSchool.setName(updatedSchool.getName()).setAddress(updatedSchool.getAddress())
                 .setEmail(updatedSchool.getEmail()).setPhone(updatedSchool.getPhone());
 
-        schoolService.addSchool(existingSchool);
+        schoolService.update(existingSchool);
         return ResponseEntity.ok(existingSchool);
     }
 }

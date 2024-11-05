@@ -26,7 +26,7 @@ public class SchoolService {
     }
 
     public School findById(Long id) {
-        logger.debug("[DEBUG] Fetching School with id: {}", id);
+        logger.info("[INFO] Fetching School with id: {}", id);
         Optional<School> schoolOpt = schoolRepository.findById(id);
 
         if (schoolOpt.isPresent()) {
@@ -38,8 +38,8 @@ public class SchoolService {
         }
     }
 
-    public School addSchool(School school) {
-        logger.debug("[DEBUG] Adding School: {}", school);
+    public School add(School school) {
+        logger.info("[INFO] Adding School: {}", school);
 
         if (schoolRepository.existsByEmail(school.getEmail())) {
             logger.debug("[DEBUG] School Already Exists with schoolEmail: {}", school.getEmail());
@@ -53,5 +53,31 @@ public class SchoolService {
 
         school = schoolRepository.save(school);
         return school;
+    }
+
+    public School update(School school) {
+        logger.info("[INFO] Updating School with id: {}", school.getId());
+
+        School existingSchool = schoolRepository.findById(school.getId())
+                .orElseThrow(() -> new NotFoundException("School", "id", school.getId()));
+
+        if (existingSchool.getEmail() != school.getEmail()) {
+            if (schoolRepository.existsByEmail(school.getEmail())) {
+                logger.debug("[DEBUG] School Already Exists with schoolEmail: {}", school.getEmail());
+                throw new FieldValueAlreadyExistsException("School", "email", school.getEmail());
+            }
+        }
+
+        if (existingSchool.getPhone() != school.getPhone()) {
+            if (schoolRepository.existsByPhone(school.getPhone())) {
+                logger.debug("[DEBUG] School Already Exists with schoolPhone: {}", school.getPhone());
+                throw new FieldValueAlreadyExistsException("School", "phone", school.getPhone());
+            }
+        }
+
+        School updatedSchool = schoolRepository.update(school);
+        logger.debug("[DEBUG] Updated School with id: {}", school.getId());
+
+        return updatedSchool;
     }
 }

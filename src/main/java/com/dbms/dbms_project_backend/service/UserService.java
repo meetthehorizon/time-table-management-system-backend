@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.repository.UserRepository;
@@ -47,10 +48,28 @@ public class UserService {
 
     public User updateUser(User user) {
         logger.info("[INFO] Updating user with id: {}", user.getId());
-        user = userRepository.update(user);
 
-        logger.debug("[DEBUG] User updated with id: {}", user.getId());
-        return user;
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException("User", "userId", user.getId()));
+
+        if (existingUser.getEmail() != user.getEmail()) {
+            if (userRepository.existsByEmail(user.getEmail())) {
+                logger.debug("[DEBUG] User already exists with email: {}", user.getEmail());
+                throw new FieldValueAlreadyExistsException("User", "email", user.getEmail());
+            }
+        }
+
+        if (existingUser.getPhone() != user.getPhone()) {
+            if (userRepository.existsByPhone(user.getPhone())) {
+                logger.debug("[DEBUG] User already exists with phone: {}", user.getPhone());
+                throw new FieldValueAlreadyExistsException("User", "phone", user.getPhone());
+            }
+        }
+
+        User updatedUser = userRepository.update(user);
+
+        logger.debug("[DEBUG] User updated with id: {}", updatedUser.getId());
+        return updatedUser;
     }
 
     public void deleteUser(Long id) {

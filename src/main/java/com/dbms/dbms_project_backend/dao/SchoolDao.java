@@ -63,20 +63,20 @@ public class SchoolDao implements SchoolRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM schools WHERE id = ?";
+        String sql = "DELETE FROM school WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        String sql = "SELECT COUNT(*) FROM schools WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM school WHERE email = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
         return count > 0;
     }
 
     @Override
     public boolean existsByPhone(String phone) {
-        String sql = "SELECT COUNT(*) FROM schools WHERE phone = ?";
+        String sql = "SELECT COUNT(*) FROM school WHERE phone = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, phone);
         return count > 0;
     }
