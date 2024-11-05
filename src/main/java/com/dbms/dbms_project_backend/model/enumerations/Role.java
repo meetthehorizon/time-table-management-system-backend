@@ -1,9 +1,10 @@
 package com.dbms.dbms_project_backend.model.enumerations;
 
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
-import com.dbms.dbms_project_backend.exception.role.RoleNotFoundException;
+import com.dbms.dbms_project_backend.exception.NotFoundException;
+
+import org.slf4j.Logger;
 
 public enum Role {
     ROLE_ADMIN,
@@ -21,9 +22,9 @@ public enum Role {
     public static Role fromString(String role) {
         try {
             return Role.valueOf(role);
-        } catch (RoleNotFoundException e) {
+        } catch (NotFoundException e) {
             logger.warn("[WARN] Role {} not found", role);
-            throw new RoleNotFoundException(role);
+            throw new NotFoundException("Role", "roleName", role);
         }
     }
 }

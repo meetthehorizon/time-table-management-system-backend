@@ -50,7 +50,7 @@ public class UserRolesDao implements UserRolesRepository {
     public Set<Role> getRolesByUser(User user) {
         String sql = "SELECT role_name FROM user_roles WHERE user_id = ?";
         logger.debug("[DEBUG] Fetching roles for user {}", user.getId());
-        List<Role> roles = jdbcTemplate.query(sql, (rs, rowNum) -> Role.valueOf(rs.getString("role_name")),
+        List<Role> roles = jdbcTemplate.query(sql, (rs, rowNum) -> Role.fromString(rs.getString("role_name")),
                 user.getId());
         logger.info("[INFO] Roles fetched for user {}: {}", user.getId(), roles);
         return Set.copyOf(roles);

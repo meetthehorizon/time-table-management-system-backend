@@ -1,7 +1,7 @@
-package com.dbms.dbms_project_backend.exception.user;
+package com.dbms.dbms_project_backend.exception;
 
 public class UserDeleteThemselveException extends RuntimeException {
     public UserDeleteThemselveException(Long id) {
-        super("User with ID " + id + " cannot delete themselves");
+        super("User [" + id + "] cannot delete themselves");
     }
 }

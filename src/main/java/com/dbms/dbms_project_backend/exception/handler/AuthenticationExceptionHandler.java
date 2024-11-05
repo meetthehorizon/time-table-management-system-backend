@@ -17,7 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.dbms.dbms_project_backend.exception.authentication.UserDetailAlreadyExistsException;
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 
 @Order(1)
 @RestControllerAdvice
@@ -59,9 +59,9 @@ public class AuthenticationExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
     }
 
-    @ExceptionHandler(UserDetailAlreadyExistsException.class)
+    @ExceptionHandler(FieldValueAlreadyExistsException.class)
     public ResponseEntity<ProblemDetail> handleUserDetailAlreadyExistsException(
-            UserDetailAlreadyExistsException exception) {
+            FieldValueAlreadyExistsException exception) {
         logger.warn("[WARN] UserDetailAlreadyExistsException: {}", exception.getMessage());
 
         ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());

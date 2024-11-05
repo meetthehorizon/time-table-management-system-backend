@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Student {
-    Long userId;
-    Long parentId;
+@NoArgsConstructor
+@Accessors(chain = true)
+public class School {
+    Long id;
+    String name;
+    String address;
+    String phone;
+    String email;
 }

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dbms.dbms_project_backend.dto.authentication.LoginUserDto;
 import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
-import com.dbms.dbms_project_backend.exception.authentication.UserDetailAlreadyExistsException;
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRepository;
@@ -27,12 +27,12 @@ public class AuthenticationService {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     public User signup(RegisterUserDto input) {
-        logger.debug("[DEBUG] Attempting to sign up user with email: {}", input.getEmail());
+        logger.info("[INFO] Signing up User with email: {}", input.getEmail());
 
         if (userRepository.existsByEmail(input.getEmail())) {
-            throw new UserDetailAlreadyExistsException("email", input.getEmail());
+            throw new FieldValueAlreadyExistsException("User", "email", input.getEmail());
         } else if (userRepository.existsByPhone(input.getPhone())) {
-            throw new UserDetailAlreadyExistsException("phone", input.getPhone());
+            throw new FieldValueAlreadyExistsException("User", "phone", input.getPhone());
         }
 
         User user = new User().setName(input.getName())
@@ -43,12 +43,12 @@ public class AuthenticationService {
                 .setPassword(passwordEncoder.encode(input.getPassword()));
 
         User savedUser = userRepository.save(user);
-        logger.info("[INFO] User signed up successfully with email: {}", input.getEmail());
+        logger.debug("[DEBUG] User signed up successfully with email: {}", input.getEmail());
         return savedUser;
     }
 
     public User authenticate(LoginUserDto input) {
-        logger.debug("[DEBUG] Attempting to authenticate user with email: {}", input.getEmail());
+        logger.info("[INFO] Attempting to authenticate user with email: {}", input.getEmail());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -65,7 +65,7 @@ public class AuthenticationService {
                     return new RuntimeException("User not found");
                 });
 
-        logger.info("[INFO] User authenticated successfully with email: {}", input.getEmail());
+        logger.debug("[DEBUG] User authenticated successfully with email: {}", input.getEmail());
         return user;
     }
 }

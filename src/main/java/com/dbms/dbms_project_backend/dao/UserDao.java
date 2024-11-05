@@ -46,8 +46,10 @@ public class UserDao implements UserRepository {
     public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
-        Set<Role> roles = userRolesRepository.getRolesByUser(user);
-        user.setRoles(roles);
+        if (user != null) {
+            Set<Role> roles = userRolesRepository.getRolesByUser(user);
+            user.setRoles(roles);
+        }
         return Optional.of(user);
     }
 
@@ -69,11 +71,7 @@ public class UserDao implements UserRepository {
                 user.getPassword());
 
         Long newUserId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
-        if (newUserId != null) {
-            user.setId(newUserId);
-        } else {
-            user = findByEmail(user.getEmail()).orElse(null);
-        }
+        user.setId(newUserId);
 
         for (Role role : user.getRoles()) {
             userRolesRepository.addRoleByUser(user, role);
@@ -88,7 +86,7 @@ public class UserDao implements UserRepository {
         String sql = "UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
         jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPhone(), user.getAddress(), user.getId());
 
-        return user;
+        return findById(user.getId()).get();
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
-import com.dbms.dbms_project_backend.exception.user.UserNotFoundException;
+import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -25,24 +24,15 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public List<User> findAll() {
-        logger.debug("[DEBUG] Fetching all users");
-        return userRepository.findAll();
-    }
+        logger.info("[INFO] Fetching all Users");
+        List<User> users = userRepository.findAll();
 
-    public User findById(Long id) {
-        logger.debug("[DEBUG] Fetching user with id: {}", id);
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            logger.info("[INFO] User found with id: {}", id);
-            return user.get();
-        } else {
-            logger.warn("[WARN] User not found with id: {}", id);
-            throw new UserNotFoundException(id);
-        }
+        logger.debug("[DEBUG] Fetched all Users");
+        return users;
     }
 
     public User createUser(User user) {
-        logger.debug("[DEBUG] Creating user with email: {}", user.getEmail());
+        logger.info("[INFO] Creating user with email: {}", user.getEmail());
         RegisterUserDto registerUserDto = new RegisterUserDto();
         registerUserDto.setName(user.getName());
         registerUserDto.setEmail(user.getEmail());
@@ -56,34 +46,41 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        logger.debug("[DEBUG] Updating user with id: {}", user.getId());
-        try {
-            user = userRepository.update(user);
-            logger.info("[INFO] User updated with id: {}", user.getId());
-        } catch (Exception e) {
-            logger.error("Error updating user with id: {}", user.getId(), e);
-        }
+        logger.info("[INFO] Updating user with id: {}", user.getId());
+        user = userRepository.update(user);
+
+        logger.debug("[DEBUG] User updated with id: {}", user.getId());
         return user;
     }
 
     public void deleteUser(Long id) {
-        logger.debug("[DEBUG] Deleting user with id: {}", id);
-        try {
-            userRepository.deleteById(id);
-            logger.info("[INFO] User deleted with id: {}", id);
-        } catch (Exception e) {
-            logger.error("Error deleting user with id: {}", id, e);
+        logger.info("[INFO] Deleting user with id: {}", id);
+        userRepository.deleteById(id);
+
+        logger.debug("[DEBUG] User deleted with id: {}", id);
+    }
+
+    public User findById(Long id) {
+        logger.info("[INFO] Fetching user with id: {}", id);
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            logger.debug("[INFO] User found with id: {}", id);
+            return user.get();
+        } else {
+            throw new NotFoundException("User", "userId", id);
         }
     }
 
     public Optional<User> findByEmail(String email) {
-        logger.debug("[DEBUG] Fetching user with email: {}", email);
+        logger.info("[INFO] Fetching user with email: {}", email);
         Optional<User> user = userRepository.findByEmail(email);
+
         if (user.isPresent()) {
-            logger.info("[INFO] User found with email: {}", email);
+            logger.debug("[DEBUG] User found with email: {}", email);
+            return user;
         } else {
-            logger.warn("[WARN] User not found with email: {}", email);
+            throw new NotFoundException("User", "email", email);
         }
-        return user;
     }
 }
