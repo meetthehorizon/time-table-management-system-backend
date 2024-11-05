@@ -103,7 +103,7 @@ CREATE TABLE
 
 CREATE TABLE
     subject_req (
-        id INT AUTO_INCREMENT,
+        id BIGINT AUTO_INCREMENT,
         class TINYINT,
         num_lectures INT,
         num_lab INT,

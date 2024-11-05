@@ -10,6 +10,8 @@ public interface UserRepository {
 
     public List<User> findAll();
 
+    public List<User> findAllBySchoolId(Long id);
+
     public User save(User user);
 
     public User update(User user);

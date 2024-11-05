@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dbms.dbms_project_backend.dto.school.SchoolDto;
 import com.dbms.dbms_project_backend.model.School;
-// import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SchoolService;
 
@@ -50,16 +49,6 @@ public class SchoolController {
         return ResponseEntity.ok(school);
     }
 
-    // @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or
-    // hasRole('ROLE_SCHOOL_INCHARGE')")
-    // @GetMapping("/{id}/users")
-    // public ResponseEntity<List<User>> findUsersBySchoolId(@PathVariable Long id)
-    // {
-    // logService.logRequestAndUser("/school/{id}/users", "GET");
-
-    // List<User> users = schoolService.findUsersBySchoolId(id);
-    // }
-
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
     public ResponseEntity<School> addSchool(@RequestBody SchoolDto addSchoolDto) {
@@ -76,7 +65,7 @@ public class SchoolController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<School> editSchool(@PathVariable Long id, @RequestBody SchoolDto updatedSchool) {
-        logService.logRequestAndUser("/school/{id}", "POST");
+        logService.logRequestAndUser("/school/{id}", "PUT");
 
         School existingSchool = schoolService.findById(id);
         logger.info("[INFO] Editing School with schoolId: {}", id);

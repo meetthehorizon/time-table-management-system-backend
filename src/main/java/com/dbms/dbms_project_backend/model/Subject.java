@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Subject {
     public long id;
-    public String subject_name;
-    public String subject_code;
-    
+    public String Name;
+    public String Code;
 }

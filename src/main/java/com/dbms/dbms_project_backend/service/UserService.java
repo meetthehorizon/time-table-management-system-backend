@@ -102,4 +102,13 @@ public class UserService {
             throw new NotFoundException("User", "email", email);
         }
     }
+
+    public List<User> findAllBySchoolId(Long id) {
+        logger.info("[INFO] Fetching all Users by school id: {}", id);
+
+        List<User> users = userRepository.findAllBySchoolId(id);
+        logger.debug("[DEBUG] Fetched all Users by school id: {}", id);
+
+        return users;
+    }
 }

@@ -38,7 +38,7 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @GetMapping()
     public ResponseEntity<List<User>> allUsers() {
         logService.logRequestAndUser("/users", "GET");
@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         logService.logRequestAndUser("/users/{id}", "GET");
@@ -56,7 +56,16 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
+    @GetMapping("/school/{id}")
+    public ResponseEntity<List<User>> getUsersBySchoolId(@PathVariable Long id) {
+        logService.logRequestAndUser("/users/school/{id}", "GET");
+
+        List<User> users = userService.findAllBySchoolId(id);
+        return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
     public ResponseEntity<User> createUser(@RequestBody User user) {
         logService.logRequestAndUser("users", "POST");
@@ -65,7 +74,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
     @PutMapping("/{id}")
     public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody UpdateUserDto updatedUser) {
         logService.logRequestAndUser("/users/{id}", "PUT");
@@ -89,7 +98,7 @@ public class UserController {
         return ResponseEntity.ok(existingUser);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         logService.logRequestAndUser("/users/{id}", "DELETE");

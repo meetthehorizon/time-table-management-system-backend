@@ -10,5 +10,11 @@ public interface SubjectRepository {
 
     public List<Subject> findAll();
 
-    public Optional<Subject> findbySubCode(String subCode);
+    public Optional<Subject> findById(Long id);
+
+    public Subject update(Subject subject);
+
+    public void deleteById(Long id);
+
+    public boolean existsById(Long id);
 }
