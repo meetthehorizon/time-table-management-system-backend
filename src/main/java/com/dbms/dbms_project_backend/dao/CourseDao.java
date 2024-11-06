@@ -16,7 +16,7 @@ public class CourseDao implements CourseRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	private static RowMapper<
+	// private static RowMapper<
 
 	@Override
 	public List<Course> findAll() {
@@ -66,5 +66,4 @@ public class CourseDao implements CourseRepository {
 		throw new UnsupportedOperationException("Unimplemented method 'findByUniqueFields'");
 	}
 
-    
 }

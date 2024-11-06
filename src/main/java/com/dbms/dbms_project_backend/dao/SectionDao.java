@@ -30,7 +30,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public Section save(Section section) {
-        String sql = "INSERT INTO sections (school_id, class, running_year, class_teacher_id, section) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sections (school_id, class, running_year, section) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 section.getSchoolId(),
                 section.getClassLevel(),
@@ -72,7 +72,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public Section update(Section section) {
-        String sql = "UPDATE sections SET school_id = ?, class = ?, running_year = ?, class_teacher_id = ?, section = ? WHERE id = ?";
+        String sql = "UPDATE sections SET school_id = ?, class = ?, running_year = ?, section = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 section.getSchoolId(),
                 section.getClassLevel(),
