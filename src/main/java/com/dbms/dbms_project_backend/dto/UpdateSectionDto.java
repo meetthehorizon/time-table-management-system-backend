@@ -22,8 +22,6 @@ public class UpdateSectionDto {
     @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
     private String runningYear;
 
-    private Long classTeacherId;
-
     @Pattern(regexp = "^[A-Z]$", message = "Section must be a capital letter from A to Z")
     private String section;
 }

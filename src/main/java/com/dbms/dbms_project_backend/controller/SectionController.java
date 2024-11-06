@@ -55,7 +55,7 @@ public class SectionController {
 
         Section section = new Section().setSchoolId(addSectionDto.getSchoolId())
                 .setClassLevel(addSectionDto.getClassLevel()).setRunningYear(addSectionDto.getRunningYear())
-                .setClassTeacherId(addSectionDto.getClassTeacherId()).setSection(addSectionDto.getSection());
+                .setSection(addSectionDto.getSection());
 
         Section savedSection = sectionService.save(section);
         return ResponseEntity.ok(savedSection);
@@ -75,7 +75,6 @@ public class SectionController {
         logService.logRequestAndUser("/section/{id}", "PUT");
 
         Section existingSection = sectionService.findById(id);
-        Optional.ofNullable(updateSectionDto.getClassTeacherId()).ifPresent(existingSection::setClassTeacherId);
         Optional.ofNullable(updateSectionDto.getSection()).ifPresent(existingSection::setSection);
         Optional.ofNullable(updateSectionDto.getRunningYear()).ifPresent(existingSection::setRunningYear);
         Optional.ofNullable(updateSectionDto.getClassLevel()).ifPresent(existingSection::setClassLevel);

@@ -23,9 +23,7 @@ public class SectionDao implements SectionRepository {
         section.setId(rs.getLong("id"));
         section.setSchoolId(rs.getLong("school_id"));
         section.setClassLevel(rs.getInt("class"));
-        section.setRunningYear(rs.getString("running_year"));
-
-        section.setClassTeacherId(rs.getLong("class_teacher_id"));
+        section.setRunningYear(rs.getString("running_year").substring(0, 4));
         section.setSection(rs.getString("section"));
         return section;
     };
@@ -37,7 +35,6 @@ public class SectionDao implements SectionRepository {
                 section.getSchoolId(),
                 section.getClassLevel(),
                 section.getRunningYear(),
-                section.getClassTeacherId(),
                 section.getSection());
 
         Long sectionId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
@@ -80,7 +77,6 @@ public class SectionDao implements SectionRepository {
                 section.getSchoolId(),
                 section.getClassLevel(),
                 section.getRunningYear(),
-                section.getClassTeacherId(),
                 section.getSection(),
                 section.getId());
 

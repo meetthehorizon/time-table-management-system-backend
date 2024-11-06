@@ -3,6 +3,9 @@ package com.dbms.dbms_project_backend.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.dbms.dbms_project_backend.model.Course;
@@ -10,6 +13,11 @@ import com.dbms.dbms_project_backend.repository.CourseRepository;
 
 @Repository
 public class CourseDao implements CourseRepository {
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	private static RowMapper<
+
 	@Override
 	public List<Course> findAll() {
 		// TODO Auto-generated method stub

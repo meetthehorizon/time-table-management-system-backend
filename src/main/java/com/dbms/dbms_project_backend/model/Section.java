@@ -18,6 +18,5 @@ public class Section {
     private Long schoolId;
     private Integer classLevel;
     private String runningYear;
-    private Long classTeacherId;
     private String section;
 }
