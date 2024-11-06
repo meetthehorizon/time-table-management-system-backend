@@ -30,10 +30,7 @@ public class SectionDao implements SectionRepository {
         section.setRunningYear(Year.of(yearValue));
 
         section.setClassTeacherId(rs.getLong("class_teacher_id"));
-
-        String sectionChar = rs.getString("section");
-        section.setSection(sectionChar != null && !sectionChar.isEmpty() ? sectionChar.charAt(0) : null);
-
+        section.setSection(rs.getString("section"));
         return section;
     };
 

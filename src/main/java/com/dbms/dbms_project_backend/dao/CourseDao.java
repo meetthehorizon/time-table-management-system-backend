@@ -1,13 +1,7 @@
 package com.dbms.dbms_project_backend.dao;
 
-import java.sql.ResultSet;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.stereotype.Repository;
 
@@ -65,5 +59,4 @@ public class CourseDao implements CourseRepository {
 		throw new UnsupportedOperationException("Unimplemented method 'findByUniqueFields'");
 	}
 
-    
 }

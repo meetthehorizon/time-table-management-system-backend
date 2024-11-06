@@ -29,5 +29,5 @@ public class AddSectionDto {
 
     @NotNull(message = "Section is required")
     @Pattern(regexp = "^[A-Z]$", message = "Section must be a capital letter from A to Z")
-    private Character section;
+    private String section;
 }

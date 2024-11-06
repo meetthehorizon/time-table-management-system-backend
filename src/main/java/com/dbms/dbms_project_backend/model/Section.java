@@ -21,5 +21,5 @@ public class Section {
     private Byte classLevel;
     private Year runningYear;
     private Long classTeacherId;
-    private Character section;
+    private String section;
 }

@@ -24,5 +24,5 @@ public class UpdateSectionDto {
     private Long classTeacherId;
 
     @Pattern(regexp = "^[A-Z]$", message = "Section must be a capital letter from A to Z")
-    private Character section;
+    private String section;
 }
