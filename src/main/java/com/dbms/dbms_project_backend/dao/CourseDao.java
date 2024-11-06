@@ -16,7 +16,10 @@ public class CourseDao implements CourseRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	// private static RowMapper<
+	private static RowMapper<Course> rowMapper = (rs, rowNum) -> {
+		return new Course().setId(rs.getLong("id")).setSectionId(rs.getLong("section_id"))
+				.setSubjectReqId(rs.getLong("subject_req_id")).setTeacherReqId(rs.getLong("teacher_req_id"));
+	};
 
 	@Override
 	public List<Course> findAll() {

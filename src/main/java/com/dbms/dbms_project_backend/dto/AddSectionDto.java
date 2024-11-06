@@ -19,6 +19,7 @@ public class AddSectionDto {
 
     @Min(value = 1, message = "Class level must be at least 1")
     @Max(value = 12, message = "Class level must be at most 12")
+    @NotNull(message = "Class level is required")
     private Integer classLevel;
 
     @NotNull(message = "Running year is required")

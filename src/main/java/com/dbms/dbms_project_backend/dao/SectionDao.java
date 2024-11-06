@@ -30,7 +30,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public Section save(Section section) {
-        String sql = "INSERT INTO sections (school_id, class, running_year, section) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sections (school_id, class, running_year, section) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 section.getSchoolId(),
                 section.getClassLevel(),

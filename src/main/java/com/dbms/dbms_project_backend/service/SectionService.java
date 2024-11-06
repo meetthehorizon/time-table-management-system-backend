@@ -11,15 +11,11 @@ import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.Section;
 import com.dbms.dbms_project_backend.repository.SchoolRepository;
 import com.dbms.dbms_project_backend.repository.SectionRepository;
-import com.dbms.dbms_project_backend.repository.TeacherRepository;
 
 @Service
 public class SectionService {
     @Autowired
     private SectionRepository sectionRepository;
-
-    @Autowired
-    private TeacherRepository teacherRepository;
 
     @Autowired
     private SchoolRepository schoolRepository;
@@ -61,11 +57,6 @@ public class SectionService {
     public Section update(Section section) {
         logger.info("[INFO] Updating section: " + section.toString());
 
-        if (!teacherRepository.existsById(section.getClassTeacherId())) {
-            logger.warn("[WARN] Teacher not found with id: " + section.getClassTeacherId());
-            throw new NotFoundException("Teacher", "id", section.getClassTeacherId());
-        }
-
         if (!schoolRepository.existsById(section.getSchoolId())) {
             logger.warn("[WARN] School not found with id: " + section.getSchoolId());
             throw new NotFoundException("School", "id", section.getSchoolId());
@@ -80,7 +71,7 @@ public class SectionService {
             }
         }
 
-        Section updatedSection = sectionRepository.save(section);
+        Section updatedSection = sectionRepository.update(section);
         logger.debug("[DEBUG] Updated section: " + updatedSection.toString());
 
         return updatedSection;
