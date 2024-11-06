@@ -11,11 +11,15 @@ import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.SubjectReq;
 import com.dbms.dbms_project_backend.repository.SubjectReqRepository;
+import com.dbms.dbms_project_backend.repository.SubjectRepository;
 
 @Service
 public class SubjectReqService {
     @Autowired
     private SubjectReqRepository subjectReqRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(SubjectReqService.class);
 
@@ -41,10 +45,15 @@ public class SubjectReqService {
     public SubjectReq save(SubjectReq subjectReq) {
         logger.info("[INFO] Saving subject requirement with id {}", subjectReq.getId());
 
-        if (subjectReqRepository.existsByAllFields(subjectReq)) {
+        if (subjectReq.getSubjectId() != null && !subjectRepository.existsById(subjectReq.getSubjectId())) {
+            logger.warn("[WARN] Subject with id {} does not exist", subjectReq.getSubjectId());
+            throw new NotFoundException("Subject", "id", subjectReq.getSubjectId());
+        }
+
+        if (subjectReqRepository.existsByUniqueFields(subjectReq)) {
             logger.warn("[WARN] Subject requirement with id {} already exists", subjectReq.getId());
 
-            subjectReqRepository.setIdByAllFields(subjectReq);
+            subjectReq = subjectReqRepository.findByUniqueFields(subjectReq);
             return subjectReq;
         }
 
@@ -57,9 +66,18 @@ public class SubjectReqService {
     public SubjectReq update(SubjectReq subjectReq) {
         logger.info("[INFO] Updating subject requirement with id {}", subjectReq.getId());
 
-        if (subjectReqRepository.existsByAllFields(subjectReq)) {
-            logger.warn("[WARN] Subject requirement with id {} already exists", subjectReq.getId());
-            throw new FieldValueAlreadyExistsException("SubjectReq", "all", subjectReq.toString());
+        if (subjectReq.getSubjectId() != null && !subjectRepository.existsById(subjectReq.getSubjectId())) {
+            logger.warn("[WARN] Subject with id {} does not exist", subjectReq.getSubjectId());
+            throw new NotFoundException("Subject", "id", subjectReq.getSubjectId());
+        }
+
+        if (subjectReqRepository.existsByUniqueFields(subjectReq)) {
+            SubjectReq existingSubjectReq = subjectReqRepository.findByUniqueFields(subjectReq);
+
+            if (!existingSubjectReq.getId().equals(subjectReq.getId())) {
+                logger.warn("[WARN] Subject requirement with id {} already exists", subjectReq.getId());
+                throw new FieldValueAlreadyExistsException("SubjectReq", "all", subjectReq.toString());
+            }
         }
 
         SubjectReq updatedSubjectReq = subjectReqRepository.update(subjectReq);

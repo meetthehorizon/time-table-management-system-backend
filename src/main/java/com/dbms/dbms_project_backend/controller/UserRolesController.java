@@ -28,7 +28,7 @@ public class UserRolesController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<User> addRole(@Valid @RequestBody AddRoleDto addRoleDto) {
-        logService.logRequestAndUser("/user-roles", "POST");
+        logService.logRequestAndUser("/user-roles", "POST"); 
 
         User user = userRolesService.addRoleToUser(addRoleDto.getId(), addRoleDto.getRoleName());
         return ResponseEntity.ok(user);

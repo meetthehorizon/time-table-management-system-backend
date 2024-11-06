@@ -70,6 +70,7 @@ public class TeacherReqController {
     @PostMapping
     public ResponseEntity<TeacherReq> save(@Valid @RequestBody AddTeacherReqDto addTeacherReqDto) {
         logService.logRequestAndUser("/teacher-req", "POST");
+        
 
         TeacherReq teacherReq = new TeacherReq();
         teacherReq.setSchoolId(addTeacherReqDto.getSchoolId())
@@ -100,6 +101,6 @@ public class TeacherReqController {
         logService.logRequestAndUser("/teacher-req/{id}", "DELETE");
 
         teacherReqService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("TeacherReq deleted successfully");
     }
 }

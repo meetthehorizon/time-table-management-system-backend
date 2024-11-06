@@ -14,9 +14,9 @@ public interface SubjectReqRepository {
 
     public List<SubjectReq> findAll();
 
-    public boolean existsByAllFields(SubjectReq subjectReq);
+    public boolean existsByUniqueFields(SubjectReq subjectReq);
 
-    public void setIdByAllFields(SubjectReq subjectReq);
+    public SubjectReq findByUniqueFields(SubjectReq subjectReq);
 
     public void deleteById(Long id);
 

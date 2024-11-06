@@ -11,4 +11,6 @@ public interface TeacherRepository {
     public Optional<Teacher> findById(Long id);
 
     public Teacher update(Teacher existingTeacher);
+
+    public boolean existsById(Long id);
 }

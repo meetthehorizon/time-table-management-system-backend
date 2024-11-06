@@ -11,12 +11,24 @@ import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.TeacherReq;
 import com.dbms.dbms_project_backend.repository.TeacherReqRepository;
+import com.dbms.dbms_project_backend.repository.SchoolRepository;
+import com.dbms.dbms_project_backend.repository.SubjectRepository;
+import com.dbms.dbms_project_backend.repository.TeacherRepository;
 
 @Service
 
 public class TeacherReqService {
     @Autowired
     private TeacherReqRepository teacherReqRepository;
+
+    @Autowired
+    private SchoolRepository schoolRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TeacherReqService.class);
 
@@ -48,10 +60,23 @@ public class TeacherReqService {
     public TeacherReq save(TeacherReq teacherReq) {
         logger.info("[INFO] Saving teacher requirement with id {}", teacherReq.getId());
 
-        if (teacherReqRepository.existsByAllFields(teacherReq)) {
+        if (teacherReq.getSchoolId() != null && !schoolRepository.existsById(teacherReq.getSchoolId())) {
+            logger.warn("[WARN] School with ID {} does not exist", teacherReq.getSchoolId());
+            throw new NotFoundException("School", "id", teacherReq.getSchoolId());
+        }
+        if (teacherReq.getSubjectId() != null && !subjectRepository.existsById(teacherReq.getSubjectId())) {
+            logger.warn("[WARN] Subject with ID {} does not exist", teacherReq.getSubjectId());
+            throw new NotFoundException("Subject", "id", teacherReq.getSubjectId());
+        }
+        if (teacherReq.getTeacherId() != null && !teacherRepository.existsById(teacherReq.getTeacherId())) {
+            logger.warn("[WARN] Teacher with ID {} does not exist", teacherReq.getTeacherId());
+            throw new NotFoundException("Teacher", "id", teacherReq.getTeacherId());
+        }
+
+        if (teacherReqRepository.existsByUniqueFields(teacherReq)) {
             logger.warn("[WARN] Teacher requirement with id {} already exists", teacherReq.getId());
 
-            teacherReqRepository.setByAllFields(teacherReq);
+            teacherReq = teacherReqRepository.findByUniqueFields(teacherReq);
             return teacherReq;
         }
 
@@ -73,9 +98,13 @@ public class TeacherReqService {
     public TeacherReq update(TeacherReq teacherReq) {
         logger.info("[INFO] Updating teacher requirement with id {}", teacherReq.getId());
 
-        if (teacherReqRepository.existsByAllFields(teacherReq)) {
-            logger.warn("[WARN] teacher requirement with id {} already exists", teacherReq.getId());
-            throw new FieldValueAlreadyExistsException("TeacherReq", "all", teacherReq.toString());
+        if (teacherReqRepository.existsByUniqueFields(teacherReq)) {
+            TeacherReq existingTeacherReq = teacherReqRepository.findByUniqueFields(teacherReq);
+
+            if (!existingTeacherReq.getId().equals(teacherReq.getId())) {
+                logger.warn("[WARN] teacher requirement with id {} already exists", teacherReq.getId());
+                throw new FieldValueAlreadyExistsException("TeacherReq", "all", teacherReq.toString());
+            }
         }
 
         TeacherReq updatedTeacherReq = teacherReqRepository.update(teacherReq);

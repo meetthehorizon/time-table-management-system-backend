@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dbms.dbms_project_backend.dto.UpdateTeacherDto;
+import com.dbms.dbms_project_backend.model.Subject;
 import com.dbms.dbms_project_backend.model.Teacher;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Position;
 import com.dbms.dbms_project_backend.service.LogService;
+import com.dbms.dbms_project_backend.service.SubjectService;
 import com.dbms.dbms_project_backend.service.TeacherService;
 import com.dbms.dbms_project_backend.service.UserService;
+import com.dbms.dbms_project_backend.exception.NotFoundException;
 
 import jakarta.validation.Valid;
 
@@ -34,6 +37,8 @@ public class TeacherController {
 
         @Autowired
         private LogService logService;
+
+        @Autowired SubjectService subjectService;
 
         @GetMapping
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
@@ -62,6 +67,10 @@ public class TeacherController {
                 if (updateTeacherDto.getUser() != null) {
                         User existingUser = userService.findById(id);
 
+                        if (existingUser == null) {
+                                throw new NotFoundException("User", "id", id);
+                        }
+
                         Optional.ofNullable(updateTeacherDto.getUser().getName())
                                         .ifPresent(existingUser::setName);
 
@@ -75,6 +84,13 @@ public class TeacherController {
                                         .ifPresent(existingUser::setAddress);
 
                         userService.updateUser(existingUser);
+                }
+
+                if (updateTeacherDto.getSubjectId() != null) {
+                        Subject subject = subjectService.findById(updateTeacherDto.getSubjectId());
+                        if (subject == null) {
+                                throw new NotFoundException("Subject", "id", updateTeacherDto.getSubjectId());
+                        }
                 }
 
                 Teacher existingTeacher = teacherService.findById(id);

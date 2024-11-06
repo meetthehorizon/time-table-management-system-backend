@@ -135,7 +135,6 @@ CREATE TABLE
         id BIGINT AUTO_INCREMENT,
         student_id BIGINT,
         section_id BIGINT,
-        enroll_year YEAR,
         PRIMARY KEY (id),
         FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE ON UPDATE CASCADE

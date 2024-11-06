@@ -68,7 +68,7 @@ public class SubjectReqDao implements SubjectReqRepository {
     }
 
     @Override
-    public boolean existsByAllFields(SubjectReq subjectReq) {
+    public boolean existsByUniqueFields(SubjectReq subjectReq) {
         String sql = "SELECT * FROM subject_req WHERE subject_id = ? AND class = ? AND num_lectures = ? AND num_lab = ? AND position = ? AND attendance_criteria = ?";
         List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, subjectReq.getSubjectId(),
                 subjectReq.getClassLevel(), subjectReq.getNumLecture(), subjectReq.getNumLab(),
@@ -90,12 +90,12 @@ public class SubjectReqDao implements SubjectReqRepository {
     }
 
     @Override
-    public void setIdByAllFields(SubjectReq subjectReq) {
-        String sql = "SELECT id FROM subject_req WHERE subject_id = ? AND class = ? AND num_lectures = ? AND num_lab = ? AND position = ? AND attendance_criteria = ?";
-        Long id = jdbcTemplate.queryForObject(sql, Long.class, subjectReq.getSubjectId(), subjectReq.getClassLevel(),
-                subjectReq.getNumLecture(), subjectReq.getNumLab(), subjectReq.getTeacherPosition().toString(),
-                subjectReq.getAttendanceCriteria());
+    public SubjectReq findByUniqueFields(SubjectReq subjectReq) {
+        String sql = "SELECT * FROM subject_req WHERE subject_id = ? AND class = ? AND num_lectures = ? AND num_lab = ? AND position = ? AND attendance_criteria = ?";
+        SubjectReq existingSubjectReq = jdbcTemplate.queryForObject(sql, subjectReqRowMapper, subjectReq.getSubjectId(),
+                subjectReq.getClassLevel(), subjectReq.getNumLecture(), subjectReq.getNumLab(),
+                subjectReq.getTeacherPosition().toString(), subjectReq.getAttendanceCriteria());
 
-        subjectReq.setId(id);
+        return existingSubjectReq;
     }
 }

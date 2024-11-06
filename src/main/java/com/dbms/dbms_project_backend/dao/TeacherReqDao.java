@@ -69,7 +69,7 @@ public class TeacherReqDao implements TeacherReqRepository {
     }
 
     @Override
-    public boolean existsByAllFields(TeacherReq teacherReq) {
+    public boolean existsByUniqueFields(TeacherReq teacherReq) {
         String sql = "SELECT * FROM teacher_req WHERE school_id = ? AND subject_id = ? AND position = ?";
         List<TeacherReq> teacherReqs = jdbcTemplate.query(sql, rowMapper, teacherReq.getSchoolId(),
                 teacherReq.getSubjectId(), teacherReq.getPosition().toString());
@@ -97,14 +97,11 @@ public class TeacherReqDao implements TeacherReqRepository {
     }
 
     @Override
-    public void setByAllFields(TeacherReq teacherReq) {
-        String sql = "SELECT id FROM teacher_req WHERE school_id = ? AND subject_id = ? AND position = ?";
-        TeacherReq existingTeacherReq = jdbcTemplate.queryForObject(sql, rowMapper, teacherReq.getSchoolId(),
+    public TeacherReq findByUniqueFields(TeacherReq teacherReq) {
+        String sql = "SELECT * FROM teacher_req WHERE school_id = ? AND subject_id = ? AND position = ?";
+        TeacherReq existingTeachReq = jdbcTemplate.queryForObject(sql, rowMapper, teacherReq.getSchoolId(),
                 teacherReq.getSubjectId(), teacherReq.getPosition().toString());
 
-        if (existingTeacherReq != null) {
-            teacherReq.setId(existingTeacherReq.getId());
-            teacherReq.setTeacherId(existingTeacherReq.getTeacherId());
-        }
+        return existingTeachReq;
     }
 }

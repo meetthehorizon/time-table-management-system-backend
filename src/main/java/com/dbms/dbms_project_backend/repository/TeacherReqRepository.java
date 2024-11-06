@@ -15,7 +15,7 @@ public interface TeacherReqRepository {
 
     TeacherReq save(TeacherReq teacherReq);
 
-    public boolean existsByAllFields(TeacherReq teacherReq);
+    public boolean existsByUniqueFields(TeacherReq teacherReq);
 
     public void deleteById(Long id);
 
@@ -23,5 +23,5 @@ public interface TeacherReqRepository {
 
     public TeacherReq update(TeacherReq teacherReq);
 
-    void setByAllFields(TeacherReq teacherReq);
+    public TeacherReq findByUniqueFields(TeacherReq teacherReq);
 }

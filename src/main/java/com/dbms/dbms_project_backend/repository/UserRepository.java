@@ -23,4 +23,6 @@ public interface UserRepository {
     public boolean existsByEmail(String email);
 
     public boolean existsByPhone(String phone);
+
+    public boolean existsById(Long id);
 }
