@@ -102,7 +102,9 @@ public class TeacherReqDao implements TeacherReqRepository {
         TeacherReq existingTeacherReq = jdbcTemplate.queryForObject(sql, rowMapper, teacherReq.getSchoolId(),
                 teacherReq.getSubjectId(), teacherReq.getPosition().toString());
 
-        teacherReq.setId(existingTeacherReq.getId());
-        teacherReq.setTeacherId(existingTeacherReq.getTeacherId());
+        if (existingTeacherReq != null) {
+            teacherReq.setId(existingTeacherReq.getId());
+            teacherReq.setTeacherId(existingTeacherReq.getTeacherId());
+        }
     }
 }
