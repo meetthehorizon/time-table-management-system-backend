@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.dbms.dbms_project_backend.event.UserRoleAddedEvent;
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
+import com.dbms.dbms_project_backend.service.UserRolesService;
 
 import jakarta.transaction.Transactional;
 
@@ -17,7 +19,10 @@ public class UserRoleAddedListener implements ApplicationListener<UserRoleAddedE
     private final static Logger logger = LoggerFactory.getLogger(UserRoleAddedListener.class);
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private UserRolesService userRolesService;
 
     @SuppressWarnings("null")
     @Override
@@ -39,6 +44,13 @@ public class UserRoleAddedListener implements ApplicationListener<UserRoleAddedE
             logger.debug("[DEBUG] Adding teacher record for user with ID {}", userId);
             String sql = "INSERT INTO teacher (id) VALUES (?)";
             jdbcTemplate.update(sql, userId);
+        } else if (event.getRole() == Role.ROLE_SCHOOL_INCHARGE || event.getRole() == Role.ROLE_TT_INCHARGE) {
+            try {
+                logger.info("[INFO] Adding employee role to user: (" + userId + ") " + event.getUser().getUsername());
+                userRolesService.addRoleToUser(userId, "ROLE_EMPLOYEE");
+            } catch (FieldValueAlreadyExistsException e) {
+                logger.info("[INFO] User already has employee role: (" + userId + ") " + event.getUser().getUsername());
+            }
         }
 
         logger.info("[INFO] User role added event processed: (" + userId + ") " + event.getUser().getUsername() + " "

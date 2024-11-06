@@ -29,8 +29,11 @@ public class UserRoleRemovedListener implements ApplicationListener<UserRoleRemo
             String sql = "DELETE FROM student WHERE id = ?";
             jdbcTemplate.update(sql, userId);
         } else if (event.getRole() == Role.ROLE_EMPLOYEE) {
-            String sql = "DELETE FROM employee WHERE id = ?";
-            jdbcTemplate.update(sql, userId);
+            String removeFromEmployeeSql = "DELETE FROM employee WHERE id = ?";
+            jdbcTemplate.update(removeFromEmployeeSql, userId);
+
+            String removeEmployeeRelatedRoles = "DELETE FROM user_roles WHERE user_id = ? AND role_name IN ('ROLE_SCHOOL_INCHARGE', 'ROLE_TT_INCHARGE')";
+            jdbcTemplate.update(removeEmployeeRelatedRoles, userId);
         } else if (event.getRole() == Role.ROLE_TEACHER) {
             String sql = "DELETE FROM teacher WHERE id = ?";
             jdbcTemplate.update(sql, userId);

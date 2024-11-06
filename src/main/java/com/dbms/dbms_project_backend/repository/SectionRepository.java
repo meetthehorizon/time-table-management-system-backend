@@ -19,5 +19,7 @@ public interface SectionRepository {
 
     public boolean existsByUniqueFields(Section section);
 
+    public boolean existsById(Long id);
+
     public Section findByUniqueFields(Section section);
 }

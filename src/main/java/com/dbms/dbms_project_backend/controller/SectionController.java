@@ -85,4 +85,12 @@ public class SectionController {
         return ResponseEntity.ok(updatedSection);
     }
 
+    @GetMapping("/school/{id}")
+    public ResponseEntity<List<Section>> findBySchoolId(@PathVariable Long id) {
+        logService.logRequestAndUser("/section/school/{id}", "GET");
+
+        List<Section> sections = sectionService.findBySchoolId(id);
+        return ResponseEntity.ok(sections);
+    }
+
 }

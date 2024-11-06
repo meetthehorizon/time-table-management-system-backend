@@ -123,4 +123,12 @@ public class SectionDao implements SectionRepository {
         return existingSection;
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT * FROM section WHERE id = ?";
+        List<Section> sections = jdbcTemplate.query(sql, rowMapper, id);
+
+        return !sections.isEmpty();
+    }
+
 }

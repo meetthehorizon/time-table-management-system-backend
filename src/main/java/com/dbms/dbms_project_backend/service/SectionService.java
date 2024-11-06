@@ -9,12 +9,20 @@ import org.springframework.stereotype.Service;
 import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.Section;
+import com.dbms.dbms_project_backend.repository.SchoolRepository;
 import com.dbms.dbms_project_backend.repository.SectionRepository;
+import com.dbms.dbms_project_backend.repository.TeacherRepository;
 
 @Service
 public class SectionService {
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private SchoolRepository schoolRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(SectionService.class);
 
@@ -53,6 +61,16 @@ public class SectionService {
     public Section update(Section section) {
         logger.info("[INFO] Updating section: " + section.toString());
 
+        if (!teacherRepository.existsById(section.getClassTeacherId())) {
+            logger.warn("[WARN] Teacher not found with id: " + section.getClassTeacherId());
+            throw new NotFoundException("Teacher", "id", section.getClassTeacherId());
+        }
+
+        if (!schoolRepository.existsById(section.getSchoolId())) {
+            logger.warn("[WARN] School not found with id: " + section.getSchoolId());
+            throw new NotFoundException("School", "id", section.getSchoolId());
+        }
+
         if (sectionRepository.existsByUniqueFields(section)) {
             Section existingSection = sectionRepository.findByUniqueFields(section);
 
@@ -78,5 +96,19 @@ public class SectionService {
 
         sectionRepository.deleteById(id);
         logger.debug("[DEBUG] Deleted section with id: " + id);
+    }
+
+    public List<Section> findBySchoolId(Long id) {
+        logger.info("[INFO] Fetching sections by school id: " + id);
+
+        schoolRepository.findById(id).orElseThrow(() -> {
+            logger.warn("[WARN] School not found with id: " + id);
+            return new NotFoundException("School", "id", id);
+        });
+
+        List<Section> sections = sectionRepository.findBySchoolId(id);
+        logger.debug("[DEBUG] Fetched sections by school id: " + id);
+
+        return sections;
     }
 }
