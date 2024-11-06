@@ -61,14 +61,14 @@ public class SchoolService {
         School existingSchool = schoolRepository.findById(school.getId())
                 .orElseThrow(() -> new NotFoundException("School", "id", school.getId()));
 
-        if (existingSchool.getEmail() != school.getEmail()) {
+        if (!existingSchool.getEmail().equals(school.getEmail())) {
             if (schoolRepository.existsByEmail(school.getEmail())) {
                 logger.debug("[DEBUG] School Already Exists with schoolEmail: {}", school.getEmail());
                 throw new FieldValueAlreadyExistsException("School", "email", school.getEmail());
             }
         }
 
-        if (existingSchool.getPhone() != school.getPhone()) {
+        if (!existingSchool.getPhone().equals(school.getPhone())) {
             if (schoolRepository.existsByPhone(school.getPhone())) {
                 logger.debug("[DEBUG] School Already Exists with schoolPhone: {}", school.getPhone());
                 throw new FieldValueAlreadyExistsException("School", "phone", school.getPhone());

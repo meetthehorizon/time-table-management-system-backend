@@ -52,14 +52,17 @@ public class UserService {
         User existingUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new NotFoundException("User", "userId", user.getId()));
 
-        if (existingUser.getEmail() != user.getEmail()) {
+        logger.info("user: {}", user);
+        logger.info("existingUser: {}", existingUser);
+
+        if (!existingUser.getEmail().equals(user.getEmail())) {
             if (userRepository.existsByEmail(user.getEmail())) {
                 logger.debug("[DEBUG] User already exists with email: {}", user.getEmail());
                 throw new FieldValueAlreadyExistsException("User", "email", user.getEmail());
             }
         }
 
-        if (existingUser.getPhone() != user.getPhone()) {
+        if (!existingUser.getPhone().equals(user.getPhone())) {
             if (userRepository.existsByPhone(user.getPhone())) {
                 logger.debug("[DEBUG] User already exists with phone: {}", user.getPhone());
                 throw new FieldValueAlreadyExistsException("User", "phone", user.getPhone());

@@ -45,11 +45,15 @@ public class UserDao implements UserRepository {
     @Override
     public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
-        User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
-        if (user != null) {
-            Set<Role> roles = userRolesRepository.getRolesByUser(user);
-            user.setRoles(roles);
+
+        List<User> users = jdbcTemplate.query(sql, rowMapper, id);
+        if (users.isEmpty()) {
+            return Optional.empty();
         }
+
+        User user = users.get(0);
+        user.setRoles(userRolesRepository.getRolesByUser(user));
+
         return Optional.of(user);
     }
 

@@ -11,12 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectDto {
-    @NotNull(message = "id cannot be empty")
-    private Long id;
+public class AddSubjectDto {
     @NotNull(message = "subject name cannot be empty")
-    private String Name;
-    @NotNull(message = "subject code cannot be empty")
-    private String Code;
+    private String name;
 
+    @NotNull(message = "subject code cannot be empty")
+    private String code;
 }

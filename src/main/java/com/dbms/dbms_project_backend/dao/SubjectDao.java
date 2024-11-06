@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,7 +28,7 @@ public class SubjectDao implements SubjectRepository {
         return subject;
     };
 
-     @Override
+    @Override
     public List<Subject> findAll() {
         String sql = "SELECT * FROM subject";
         List<Subject> subjects = jdbcTemplate.query(sql, rowMapper);
@@ -39,12 +38,18 @@ public class SubjectDao implements SubjectRepository {
     @Override
     public Optional<Subject> findById(Long id) {
         String sql = "SELECT * FROM subject WHERE id = ?";
-        Subject subject = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        List<Subject> subjects = jdbcTemplate.query(sql, rowMapper, id);
+
+        if (subjects.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Subject subject = subjects.get(0);
         return Optional.of(subject);
     }
 
     @SuppressWarnings("null")
-	@Override
+    @Override
     public Subject save(Subject subject) {
         String sql = "INSERT INTO subject (Name,Code) VALUES (?, ?)";
         jdbcTemplate.update(sql, subject.getName(), subject.getCode());
@@ -54,7 +59,7 @@ public class SubjectDao implements SubjectRepository {
         return subject;
     }
 
-     @Override
+    @Override
     public Subject update(Subject subject) {
         String sql = "UPDATE subject SET Name = ?, Code = ? WHERE id = ?";
         jdbcTemplate.update(sql, subject.getName(), subject.getCode(), subject.getId());
@@ -62,16 +67,23 @@ public class SubjectDao implements SubjectRepository {
         return findById(subject.getId()).get();
     }
 
-     @Override
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM subject WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-     @Override
+    @Override
     public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM subject WHERE id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count > 0;
+    }
+
+    @Override
+    public boolean existsBycode(String code) {
+        String sql = "SELECT COUNT(*) FROM subject WHERE code = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, code);
         return count > 0;
     }
 

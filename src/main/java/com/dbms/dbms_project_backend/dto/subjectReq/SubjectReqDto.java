@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SubjectReq {
+public class SubjectReqDto {
     @NotNull
     private Long subjectId;
 

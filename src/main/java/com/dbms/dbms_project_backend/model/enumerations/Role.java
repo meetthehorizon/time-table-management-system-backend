@@ -22,7 +22,7 @@ public enum Role {
     public static Role fromString(String roleStr) {
         try {
             return Role.valueOf(roleStr);
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
             logger.warn("[WARN] Role {} not found", roleStr);
             throw new NotFoundException("Role", "roleName", roleStr);
         }

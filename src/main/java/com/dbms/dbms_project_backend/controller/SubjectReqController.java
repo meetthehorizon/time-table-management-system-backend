@@ -16,6 +16,8 @@ import com.dbms.dbms_project_backend.model.SubjectReq;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SubjectReqService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/subject-req")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or hasRole('ROLE_SCHOOL_INCHARGE')")
@@ -35,7 +37,7 @@ public class SubjectReqController {
     }
 
     @PostMapping
-    public ResponseEntity<SubjectReq> createSubjectReq(@RequestBody SubjectReq subjectReq) {
+    public ResponseEntity<SubjectReq> createSubjectReq(@Valid @RequestBody SubjectReq subjectReq) {
         logService.logRequestAndUser("/subject-req", "POST");
 
         SubjectReq newSubjectReq = subjectReqService.save(subjectReq);
@@ -43,7 +45,7 @@ public class SubjectReqController {
     }
 
     @PutMapping
-    public ResponseEntity<SubjectReq> updateSubjectReq(@RequestBody SubjectReq subjectReq) {
+    public ResponseEntity<SubjectReq> updateSubjectReq(@Valid @RequestBody SubjectReq subjectReq) {
         logService.logRequestAndUser("/subject-req", "PUT");
 
         SubjectReq updatedSubjectReq = subjectReqService.update(subjectReq);
@@ -51,7 +53,7 @@ public class SubjectReqController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteSubjectReq(@RequestBody SubjectReq subjectReq) {
+    public ResponseEntity<String> deleteSubjectReq( @Valid @RequestBody SubjectReq subjectReq) {
         logService.logRequestAndUser("/subject-req", "DELETE");
 
         subjectReqService.delete(subjectReq);

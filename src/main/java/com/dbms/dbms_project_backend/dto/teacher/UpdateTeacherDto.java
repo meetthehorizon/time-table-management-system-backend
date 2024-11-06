@@ -1,6 +1,6 @@
 package com.dbms.dbms_project_backend.dto.teacher;
 
-import com.dbms.dbms_project_backend.dto.authentication.UpdateUserDto;
+import com.dbms.dbms_project_backend.dto.user.UpdateUserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

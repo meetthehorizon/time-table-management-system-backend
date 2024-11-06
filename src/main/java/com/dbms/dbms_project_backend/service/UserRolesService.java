@@ -1,5 +1,6 @@
 package com.dbms.dbms_project_backend.service;
 
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
@@ -27,6 +28,10 @@ public class UserRolesService {
 
         User user = userService.findById(userId);
         Role role = Role.fromString(roleStr);
+
+        if (user.getRoles().contains(role)) {
+            throw new FieldValueAlreadyExistsException("User", "roleName", roleStr);
+        }
 
         user = userRolesRepository.addRoleByUser(user, role);
         logger.debug("[DEBUG] Role: {} added to User with id: {}", roleStr, userId);

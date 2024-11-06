@@ -42,30 +42,30 @@ public class SubjectService {
 
     public void deleteById(Long id) {
         logger.info("[INFO] Deleting subject with id: {}", id);
+
+        subjectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subject", "ID", id));
         subjectRepository.deleteById(id);
 
         logger.debug("[DEBUG] Subject deleted with id: {}", id);
 
     }
 
-    public Subject updatedSubject(Subject subject) {
+    public Subject update(Subject subject) {
         logger.info("[INFO] Updating subject with subCode: {}", subject.getCode());
 
         Subject existingSubject = subjectRepository.findById(subject.getId())
-                .orElseThrow(() -> new NotFoundException("Subject", "subCode", subject.getCode()));
+                .orElseThrow(() -> new NotFoundException("Subject", "ID", subject.getId()));
 
-        if (existingSubject.getCode() != subject.getCode()) {
-            if (subjectRepository.existsById(subject.getId())) {
-                logger.debug("[DEBUG] Subject already exists with id: {}", subject.getId());
-                throw new FieldValueAlreadyExistsException("Subject", "ID", subject.getId());
-            }
+        if (!existingSubject.getCode().equals(subject.getCode()) && subjectRepository.existsBycode(subject.getCode())) {
+            logger.debug("[DEBUG] Subject with code {} already exists", subject.getCode());
+            throw new FieldValueAlreadyExistsException("Subject", "Code", subject.getCode());
         }
 
         Subject updatedSubject = subjectRepository.update(subject);
 
         logger.debug("[DEBUG] Subject updated with ID: {}", updatedSubject.getId());
         return updatedSubject;
-
     }
 
     public Subject createSubject(Subject subject) {

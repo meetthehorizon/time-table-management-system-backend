@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.Teacher;
+import com.dbms.dbms_project_backend.repository.SubjectRepository;
 import com.dbms.dbms_project_backend.repository.TeacherRepository;
 
 @Service
 public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
 
@@ -36,6 +40,12 @@ public class TeacherService {
 
     public Teacher update(Teacher existingTeacher) {
         logger.info("[INFO] Updating Teacher with id: {}", existingTeacher.getId());
+
+        if (existingTeacher.getSubjectId() != null) {
+            subjectRepository.findById(existingTeacher.getSubjectId())
+                    .orElseThrow(() -> new NotFoundException("Subject", "id", existingTeacher.getSubjectId()));
+        }
+
         Teacher updatedTeacher = teacherRepository.update(existingTeacher);
 
         logger.debug("[DEBUG] Updated Teacher with id: {}", existingTeacher.getId());

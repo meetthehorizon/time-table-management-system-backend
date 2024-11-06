@@ -12,6 +12,8 @@ import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.UserRolesService;
 
+import jakarta.validation.Valid;
+
 import java.util.Set;
 
 @RestController
@@ -25,7 +27,7 @@ public class UserRolesController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
-    public ResponseEntity<User> addRole(@RequestBody AddRoleDto addRoleDto) {
+    public ResponseEntity<User> addRole(@Valid @RequestBody AddRoleDto addRoleDto) {
         logService.logRequestAndUser("/user-roles", "POST");
 
         User user = userRolesService.addRoleToUser(addRoleDto.getId(), addRoleDto.getRoleName());
@@ -43,7 +45,7 @@ public class UserRolesController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping()
-    public ResponseEntity<User> deleteRole(@RequestBody DeleteUserDto deleteUserDto) {
+    public ResponseEntity<User> deleteRole(@Valid @RequestBody DeleteUserDto deleteUserDto) {
         logService.logRequestAndUser("/user-roles", "DELETE");
 
         User user = userRolesService.deleteRoleFromUser(deleteUserDto.getId(), deleteUserDto.getRoleName());

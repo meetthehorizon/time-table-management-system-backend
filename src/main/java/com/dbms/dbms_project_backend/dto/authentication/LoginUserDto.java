@@ -13,7 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoginUserDto {
     @Pattern(regexp = "^[\\w.+\\-]+@iitbhu\\.ac\\.in$", message = "Email must end with @iitbhu.ac.in")
-    @NotNull(message = "Email can not be empty")
+    @NotNull
     private String email;
+
+    @NotNull
     private String password;
 }

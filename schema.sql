@@ -11,7 +11,7 @@ CREATE TABLE
         email VARCHAR(100) NOT NULL UNIQUE,
         phone CHAR(10) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        address VARCHAR(255) NOT NULL,
+        address VARCHAR(255) NOT NULL
     );
 
 CREATE TABLE
@@ -20,7 +20,6 @@ CREATE TABLE
         role_name ENUM (
             'ROLE_USER',
             'ROLE_ADMIN',
-            'ROLE_PARENT',
             'ROLE_STUDENT',
             'ROLE_TEACHER',
             'ROLE_EMPLOYEE',
@@ -29,23 +28,14 @@ CREATE TABLE
             'ROLE_GENERAL_MANAGER'
         ) NOT NULL,
         PRIMARY KEY (user_id, role_name),
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    );
-
-CREATE TABLE
-    parent (
-        id BIGINT,
-        PRIMARY KEY (id),
-        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
     student (
         id BIGINT,
-        parent_id BIGINT,
         PRIMARY KEY (id),
-        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY (parent_id) REFERENCES parent (id) ON DELETE SET NULL ON UPDATE CASCADE
+        FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 CREATE TABLE
@@ -157,7 +147,7 @@ CREATE TABLE
     courses (
         id BIGINT AUTO_INCREMENT,
         section_id BIGINT,
-        subject_req_id INT,
+        subject_req_id BIGINT,
         teacher_req_id BIGINT,
         PRIMARY KEY (id),
         FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -189,4 +179,4 @@ CREATE TABLE
         FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-SHOW TABLES;
+SHOW TABLES;    

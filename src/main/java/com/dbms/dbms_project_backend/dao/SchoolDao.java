@@ -39,7 +39,11 @@ public class SchoolDao implements SchoolRepository {
     @Override
     public Optional<School> findById(Long id) {
         String sql = "SELECT * FROM school WHERE id = ?";
-        School school = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        List<School> schools = jdbcTemplate.query(sql, rowMapper, id);
+        if (schools.isEmpty()) {
+            return Optional.empty();
+        }
+        School school = schools.get(0);
         return Optional.of(school);
     }
 

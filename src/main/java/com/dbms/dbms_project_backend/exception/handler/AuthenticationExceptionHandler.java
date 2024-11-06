@@ -47,20 +47,8 @@ public class AuthenticationExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorDetail);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleGenericException(Exception exception) {
-        logger.warn("[WARN] Handling generic exception: {}", exception.getMessage());
-        logger.debug("[DEBUG] Exception details: ", exception);
-
-        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                exception.getMessage());
-        errorDetail.setProperty("description", "An unexpected error occurred.");
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
-    }
-
     @ExceptionHandler(FieldValueAlreadyExistsException.class)
-    public ResponseEntity<ProblemDetail> handleUserDetailAlreadyExistsException(
+    public ResponseEntity<ProblemDetail> handleFieldValueAlreadyExistsException(
             FieldValueAlreadyExistsException exception) {
         logger.warn("[WARN] UserDetailAlreadyExistsException: {}", exception.getMessage());
 
@@ -81,52 +69,4 @@ public class AuthenticationExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
-    // @ExceptionHandler(Exception.class)
-    // public ProblemDetail handleSecurityException(Exception exception) {
-    // ProblemDetail errorDetail = null;
-    // exception.printStackTrace();
-
-    // if (exception instanceof BadCredentialsException) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "The username or password is
-    // incorrect");
-
-    // return errorDetail;
-    // }
-
-    // if (exception instanceof AccountStatusException) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "The account is locked");
-    // }
-
-    // if (exception instanceof AccessDeniedException) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "You are not authorized to access this
-    // resource");
-    // }
-
-    // if (exception instanceof SignatureException) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "The JWT signature is invalid");
-    // }
-
-    // if (exception instanceof ExpiredJwtException) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "The JWT token has expired");
-    // }
-
-    // if (errorDetail == null) {
-    // errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500),
-    // exception.getMessage());
-    // errorDetail.setProperty("description", "Unknown internal server error.");
-    // }
-
-    // return errorDetail;
-    // }
 }

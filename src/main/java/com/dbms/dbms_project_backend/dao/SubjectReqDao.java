@@ -1,5 +1,6 @@
 package com.dbms.dbms_project_backend.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,12 @@ public class SubjectReqDao implements SubjectReqRepository {
     @Override
     public Optional<SubjectReq> findById(Long id) {
         String sql = "SELECT * FROM subject_req WHERE id = ?";
-        SubjectReq subjectReq = jdbcTemplate.queryForObject(sql, subjectReqRowMapper, id);
+        List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, id);
+        if (subjectReqs.isEmpty()) {
+            return Optional.empty();
+        }
+
+        SubjectReq subjectReq = subjectReqs.get(0);
         return Optional.of(subjectReq);
     }
 

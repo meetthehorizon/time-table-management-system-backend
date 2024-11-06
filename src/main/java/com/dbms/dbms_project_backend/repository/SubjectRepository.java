@@ -17,4 +17,6 @@ public interface SubjectRepository {
     public void deleteById(Long id);
 
     public boolean existsById(Long id);
+
+    public boolean existsBycode(String code);
 }

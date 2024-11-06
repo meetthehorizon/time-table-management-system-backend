@@ -24,13 +24,18 @@ public class TeacherDao implements TeacherRepository {
         Teacher teacher = new Teacher();
         teacher.setId(rs.getLong("id"));
         teacher.setSubjectId(rs.getLong("subject_id"));
-        teacher.setPosition(Position.valueOf(rs.getString("position")));
+
+        if (rs.getString("position") != null) {
+            teacher.setPosition(Position.valueOf(rs.getString("position")));
+        } else {
+            teacher.setPosition(null);
+        }
         return teacher;
     };
 
     @Override
     public List<Teacher> findAll() {
-        String sql = "SELECT * FROM teachers";
+        String sql = "SELECT * FROM teacher";
         List<Teacher> teachers = jdbcTemplate.query(sql, teacherRowMapper);
 
         teachers.forEach((teacher) -> {
@@ -42,19 +47,25 @@ public class TeacherDao implements TeacherRepository {
 
     @Override
     public Optional<Teacher> findById(Long id) {
-        String sql = "SELECT * FROM teachers WHERE id = ?";
-        Teacher teacher = jdbcTemplate.queryForObject(sql, teacherRowMapper, id);
+        String sql = "SELECT * FROM teacher WHERE id = ?";
+        List<Teacher> teachers = jdbcTemplate.query(sql, teacherRowMapper, id);
 
-        if (teacher != null) {
-            teacher.setUser(userDao.findById(teacher.getId()).get());
+        if (teachers.isEmpty()) {
+            return Optional.empty();
         }
+
+        Teacher teacher = teachers.get(0);
+        teacher.setUser(userDao.findById(teacher.getId()).get());
+
         return Optional.of(teacher);
     }
 
     @Override
     public Teacher update(Teacher existingTeacher) {
-        String sql = "UPDATE teachers SET subject_id = ?, position = ? WHERE id = ?";
-        jdbcTemplate.update(sql, existingTeacher.getSubjectId(), existingTeacher.getPosition().toString(),
+        String sql = "UPDATE teacher SET subject_id = ?, position = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                existingTeacher.getSubjectId() != 0 ? existingTeacher.getSubjectId() : null,
+                existingTeacher.getPosition() != null ? existingTeacher.getPosition().toString() : null,
                 existingTeacher.getId());
 
         return existingTeacher;

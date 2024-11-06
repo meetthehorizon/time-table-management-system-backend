@@ -16,7 +16,6 @@ import com.dbms.dbms_project_backend.model.enumerations.Position;
 public class Teacher {
     public Long id;
     public User user;
-    public Position Position;
+    public Position position;
     public Long subjectId;
-    public Long schoolId; // TODO - add schoolId
 }

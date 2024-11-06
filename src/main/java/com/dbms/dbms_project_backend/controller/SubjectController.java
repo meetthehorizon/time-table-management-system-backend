@@ -1,6 +1,7 @@
 package com.dbms.dbms_project_backend.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.subject.SubjectDto;
+import com.dbms.dbms_project_backend.dto.subject.AddSubjectDto;
+import com.dbms.dbms_project_backend.dto.subject.UpdateSubjectDto;
 import com.dbms.dbms_project_backend.model.Subject;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SubjectService;
 
-@RequestMapping("/subject")
+import jakarta.validation.Valid;
+
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
+@RequestMapping("/sub")
 @RestController
 public class SubjectController {
     @Autowired
@@ -28,8 +33,6 @@ public class SubjectController {
     @Autowired
     private LogService logService;
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @GetMapping()
     public ResponseEntity<List<Subject>> findAll() {
         logService.logRequestAndUser("/subject", "GET");
@@ -38,29 +41,30 @@ public class SubjectController {
         return ResponseEntity.ok(subjects);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping
-    public ResponseEntity<Subject> addSubject(@RequestBody SubjectDto addsubjectDto) {
+    public ResponseEntity<Subject> addSubject(@Valid @RequestBody AddSubjectDto addsubjectDto) {
         logService.logRequestAndUser("subject", "POST");
 
         Subject subject = new Subject();
-        subject.setId(addsubjectDto.getId()).setCode(addsubjectDto.getCode()).setName(addsubjectDto.getName());
+        subject.setCode(addsubjectDto.getCode()).setName(addsubjectDto.getName());
         subject = subjectService.createSubject(subject);
         return ResponseEntity.ok(subject);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable Long id, @RequestBody SubjectDto updateSubjectDto) {
+    public ResponseEntity<Subject> updateSubject(@PathVariable Long id,
+            @Valid @RequestBody UpdateSubjectDto updateSubjectDto) {
         logService.logRequestAndUser("/subject/{id}", "PUT");
 
-         Subject existingSubject = subjectService.findById(id);
-         existingSubject.setName(updateSubjectDto.getName()).setCode(updateSubjectDto.getCode());
-         subjectService.updatedSubject(existingSubject);
-         return ResponseEntity.ok(existingSubject);
+        Subject existingSubject = subjectService.findById(id);
+
+        Optional.ofNullable(updateSubjectDto.getName()).ifPresent(existingSubject::setName);
+        Optional.ofNullable(updateSubjectDto.getCode()).ifPresent(existingSubject::setCode);
+
+        subjectService.update(existingSubject);
+        return ResponseEntity.ok(existingSubject);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<Subject> findById(@PathVariable Long id) {
         logService.logRequestAndUser("/subject/{id}", "GET");
@@ -69,15 +73,10 @@ public class SubjectController {
         return ResponseEntity.ok(subject);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
         logService.logRequestAndUser("/subject/{id}", "DELETE");
         subjectService.deleteById(id);
         return ResponseEntity.noContent().build();
-
-        
     }
-
-    
 }

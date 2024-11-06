@@ -19,10 +19,14 @@ public class SqlExceptionHandler {
     public ResponseEntity<ProblemDetail> handleDataAccessException(DataAccessException exception) {
         logger.error("[ERROR] DataAccessException: {}", exception.getMessage());
 
-        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                "An error occurred while processing the request");
-        errorDetail.setProperty("description", "An error occurred while processing the request");
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "A database error occurred while processing the request");
+
+        errorDetail.setProperty("description", exception.getMessage());
+        errorDetail.setProperty("errorType", exception.getClass().getSimpleName());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
     }
+
 }

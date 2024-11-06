@@ -30,8 +30,12 @@ public class AuthenticationService {
         logger.info("[INFO] Signing up User with email: {}", input.getEmail());
 
         if (userRepository.existsByEmail(input.getEmail())) {
+            logger.error("[ERROR] User already exists with email: {}", input.getEmail());
             throw new FieldValueAlreadyExistsException("User", "email", input.getEmail());
-        } else if (userRepository.existsByPhone(input.getPhone())) {
+        }
+
+        if (userRepository.existsByPhone(input.getPhone())) {
+            logger.error("[ERROR] User already exists with phone: {}", input.getPhone());
             throw new FieldValueAlreadyExistsException("User", "phone", input.getPhone());
         }
 

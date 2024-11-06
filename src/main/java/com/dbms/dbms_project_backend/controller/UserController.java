@@ -1,6 +1,7 @@
 package com.dbms.dbms_project_backend.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.authentication.UpdateUserDto;
+import com.dbms.dbms_project_backend.dto.user.UpdateUserDto;
 import com.dbms.dbms_project_backend.exception.UserDeleteThemselveException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.UserService;
+
+import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +70,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         logService.logRequestAndUser("users", "POST");
 
         User createdUser = userService.createUser(user);
@@ -76,7 +79,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or (hasRole('ROLE_USER') and authentication.principal.id == #id)")
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(@PathVariable Long id, @RequestBody UpdateUserDto updatedUser) {
+    public ResponseEntity<User> editUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updatedUser) {
         logService.logRequestAndUser("/users/{id}", "PUT");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -89,10 +92,10 @@ public class UserController {
 
         User existingUser = userService.findById(id);
 
-        existingUser.setName(updatedUser.getName());
-        existingUser.setAddress(updatedUser.getAddress());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhone(updatedUser.getPhone());
+        Optional.ofNullable(updatedUser.getName()).ifPresent(existingUser::setName);
+        Optional.ofNullable(updatedUser.getAddress()).ifPresent(existingUser::setAddress);
+        Optional.ofNullable(updatedUser.getEmail()).ifPresent(existingUser::setEmail);
+        Optional.ofNullable(updatedUser.getPhone()).ifPresent(existingUser::setPhone);
 
         userService.updateUser(existingUser);
         return ResponseEntity.ok(existingUser);
