@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.subject.AddSubjectDto;
-import com.dbms.dbms_project_backend.dto.subject.UpdateSubjectDto;
+import com.dbms.dbms_project_backend.dto.AddSubjectDto;
+import com.dbms.dbms_project_backend.dto.UpdateSubjectDto;
 import com.dbms.dbms_project_backend.model.Subject;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SubjectService;

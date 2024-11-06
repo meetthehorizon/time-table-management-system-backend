@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
+import com.dbms.dbms_project_backend.exception.NotFoundException;
+
 @Order(1)
 @RestControllerAdvice
 public class SqlExceptionHandler {
@@ -29,4 +32,24 @@ public class SqlExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleUserNotFoundException(NotFoundException exception) {
+        logger.warn("[WARN] UserNotFoundException: {}", exception.getMessage());
+
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
+                exception.getMessage());
+        errorDetail.setProperty("description", "The requested resource was not found");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetail);
+    }
+
+    @ExceptionHandler(FieldValueAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleFieldValueAlreadyExistsException(
+            FieldValueAlreadyExistsException exception) {
+        logger.warn("[WARN] UserDetailAlreadyExistsException: {}", exception.getMessage());
+
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDetail);
+    }
 }

@@ -61,14 +61,14 @@ public class TeacherDao implements TeacherRepository {
     }
 
     @Override
-    public Teacher update(Teacher existingTeacher) {
+    public Teacher update(Teacher teacher) {
         String sql = "UPDATE teacher SET subject_id = ?, position = ? WHERE id = ?";
         jdbcTemplate.update(sql,
-                existingTeacher.getSubjectId() != 0 ? existingTeacher.getSubjectId() : null,
-                existingTeacher.getPosition() != null ? existingTeacher.getPosition().toString() : null,
-                existingTeacher.getId());
+                teacher.getSubjectId() != 0 ? teacher.getSubjectId() : null,
+                teacher.getPosition() != null ? teacher.getPosition().toString() : null,
+                teacher.getId());
 
-        return existingTeacher;
+        return teacher;
     }
 
 }

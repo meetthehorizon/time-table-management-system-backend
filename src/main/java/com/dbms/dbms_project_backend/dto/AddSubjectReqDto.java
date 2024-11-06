@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.subjectReq;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -15,25 +15,25 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class AddSubjectReqDto {
-    @NotNull
+    @NotNull(message = "School ID is required")
     private Long subjectId;
 
-    @NotNull
+    @NotNull(message = "School ID is required")
     private Integer numLab;
 
-    @NotNull
+    @NotNull(message = "School ID is required")
     @Min(1)
     @Max(12)
     private Integer classLevel;
 
-    @NotNull
+    @NotNull(message = "School ID is required")
     private Integer numLecture;
 
-    @NotNull
+    @NotNull(message = "School ID is required")
     @Min(0)
     @Max(100)
     private Integer attendanceCriteria;
 
-    @NotNull
+    @NotNull(message = "School ID is required")
     private String teacherPosition;
 }

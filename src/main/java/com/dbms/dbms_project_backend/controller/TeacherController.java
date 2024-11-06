@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.teacher.UpdateTeacherDto;
+import com.dbms.dbms_project_backend.dto.UpdateTeacherDto;
 import com.dbms.dbms_project_backend.model.Teacher;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Position;
@@ -54,7 +54,7 @@ public class TeacherController {
         }
 
         @PutMapping("/{id}")
-        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER') or (hasRole('ROLE_TEACHER') and authentication.principal.id == #id)")
+        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
         public ResponseEntity<Teacher> updateTeacher(@PathVariable Long id,
                         @Valid @RequestBody UpdateTeacherDto updateTeacherDto) {
                 logService.logRequestAndUser("/teachers/{id}", "PUT");

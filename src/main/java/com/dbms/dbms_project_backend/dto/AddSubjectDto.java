@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.subject;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.NotNull;
 

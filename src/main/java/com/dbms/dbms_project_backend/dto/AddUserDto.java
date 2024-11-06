@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.user;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

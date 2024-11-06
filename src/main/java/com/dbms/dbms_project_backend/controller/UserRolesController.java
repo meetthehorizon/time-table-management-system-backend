@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.dbms.dbms_project_backend.dto.userRoles.AddRoleDto;
-import com.dbms.dbms_project_backend.dto.userRoles.DeleteUserDto;
+import com.dbms.dbms_project_backend.dto.AddRoleDto;
+import com.dbms.dbms_project_backend.dto.DeleteUserRoleDto;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.service.LogService;
@@ -45,10 +45,10 @@ public class UserRolesController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping()
-    public ResponseEntity<User> deleteRole(@Valid @RequestBody DeleteUserDto deleteUserDto) {
+    public ResponseEntity<User> deleteRole(@Valid @RequestBody DeleteUserRoleDto deleteUserRoleDto) {
         logService.logRequestAndUser("/user-roles", "DELETE");
 
-        User user = userRolesService.deleteRoleFromUser(deleteUserDto.getId(), deleteUserDto.getRoleName());
+        User user = userRolesService.deleteRoleFromUser(deleteUserRoleDto.getId(), deleteUserRoleDto.getRoleName());
         return ResponseEntity.ok(user);
     }
 }

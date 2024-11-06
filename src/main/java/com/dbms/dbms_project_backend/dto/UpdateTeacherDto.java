@@ -1,7 +1,6 @@
-package com.dbms.dbms_project_backend.dto.teacher;
+package com.dbms.dbms_project_backend.dto;
 
-import com.dbms.dbms_project_backend.dto.user.UpdateUserDto;
-
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateTeacherDto {
     private Long subjectId;
+    @Valid
     private UpdateUserDto user;
     private String position;
 }

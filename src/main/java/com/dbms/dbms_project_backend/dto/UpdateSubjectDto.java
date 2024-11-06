@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.userRoles;
+package com.dbms.dbms_project_backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteUserDto {
-    private Long id;
-    private String roleName;
+public class UpdateSubjectDto {
+    private String name;
+    private String code;
 }

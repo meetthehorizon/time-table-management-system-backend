@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dbms.dbms_project_backend.dto.authentication.RegisterUserDto;
+import com.dbms.dbms_project_backend.dto.RegisterUserDto;
 import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;

@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.subjectReq;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

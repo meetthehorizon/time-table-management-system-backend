@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.authentication;
+package com.dbms.dbms_project_backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,22 +14,22 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 public class RegisterUserDto {
     @Size(min = 3, message = "Name must be at least 3 characters long")
-    @NotNull
+    @NotNull(message = "Name is required")
     private String name;
 
     @Pattern(regexp = "^[\\w.+\\-]+@iitbhu\\.ac\\.in$", message = "Email must end with @iitbhu.ac.in")
-    @NotNull
+    @NotNull(message = "Email is required")
     private String email;
 
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits long")
-    @NotNull
+    @NotNull(message = "Phone number is required")
     private String phone;
 
-    @NotNull
+    @NotNull(message = "Address is required")
     private String address;
 
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one digit, one uppercase letter, one lowercase letter, and one special character")
-    @NotNull
+    @NotNull(message = "Password is required")
     private String password;
 }

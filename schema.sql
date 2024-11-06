@@ -10,7 +10,7 @@ CREATE TABLE
         name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL UNIQUE,
         phone CHAR(10) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
+        password VAtRCHAR(255) NOT NULL,
         address VARCHAR(255) NOT NULL
     );
 

@@ -128,31 +128,17 @@ public class UserDao implements UserRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, phone) > 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<User> findAllBySchoolId(Long id) {
         String sql = """
-                SELECT u.*
-                FROM users u
-                JOIN (
-                    -- Fetch employees associated with the given school_id
+                SELECT * FROM users
+                WHERE id IN (
                     SELECT id FROM employee WHERE school_id = ?
-                    UNION
-                    -- Fetch teachers associated with the given school_id through the teacher_req table
-                    SELECT t.id
-                    FROM teacher t
-                    JOIN teacher_req tr ON t.id = tr.teacher_id
-                    WHERE tr.school_id = ?
-                    UNION
-                    -- Fetch students associated with the given school_id
-                    SELECT s.id
-                    FROM student s
-                    JOIN parent p ON s.parent_id = p.id
-                    JOIN employee e ON p.id = e.id
-                    WHERE e.school_id = ?
-                ) AS user_ids ON u.id = user_ids.id;
+                )
                 """;
 
-        return jdbcTemplate.query(sql, new Object[] { id, id, id }, rowMapper);
+        List<User> users = jdbcTemplate.query(sql, rowMapper, id);
+        users.forEach((user) -> user.setRoles(userRolesRepository.getRolesByUser(user)));
+        return users;
     }
 }

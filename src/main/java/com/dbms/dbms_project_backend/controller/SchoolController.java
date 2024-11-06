@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.school.AddSchoolDto;
-import com.dbms.dbms_project_backend.dto.school.UpdateSchoolDto;
+import com.dbms.dbms_project_backend.dto.AddSchoolDto;
+import com.dbms.dbms_project_backend.dto.UpdateSchoolDto;
 import com.dbms.dbms_project_backend.model.School;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SchoolService;

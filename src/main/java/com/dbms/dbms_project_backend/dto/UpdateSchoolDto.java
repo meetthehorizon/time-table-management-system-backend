@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.school;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

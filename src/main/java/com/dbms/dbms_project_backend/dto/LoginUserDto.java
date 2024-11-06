@@ -1,4 +1,4 @@
-package com.dbms.dbms_project_backend.dto.authentication;
+package com.dbms.dbms_project_backend.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoginUserDto {
     @Pattern(regexp = "^[\\w.+\\-]+@iitbhu\\.ac\\.in$", message = "Email must end with @iitbhu.ac.in")
-    @NotNull
+    @NotNull(message = "Email is required")
     private String email;
 
-    @NotNull
+    @NotNull(message = "Password is required")
     private String password;
 }

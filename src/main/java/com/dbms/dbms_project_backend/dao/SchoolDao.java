@@ -84,4 +84,11 @@ public class SchoolDao implements SchoolRepository {
         int count = jdbcTemplate.queryForObject(sql, Integer.class, phone);
         return count > 0;
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM school WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count > 0;
+    }
 }

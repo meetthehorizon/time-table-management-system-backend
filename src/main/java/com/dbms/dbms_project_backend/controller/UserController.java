@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dbms.dbms_project_backend.dto.user.UpdateUserDto;
+import com.dbms.dbms_project_backend.dto.UpdateUserDto;
 import com.dbms.dbms_project_backend.exception.UserDeleteThemselveException;
 import com.dbms.dbms_project_backend.model.User;
 import com.dbms.dbms_project_backend.model.enumerations.Role;
