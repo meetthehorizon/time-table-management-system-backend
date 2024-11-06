@@ -10,7 +10,7 @@ CREATE TABLE
         name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL UNIQUE,
         phone CHAR(10) NOT NULL UNIQUE,
-        password VAtRCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
         address VARCHAR(255) NOT NULL
     );
 
@@ -88,7 +88,8 @@ CREATE TABLE
         PRIMARY KEY (id),
         FOREIGN KEY (school_id) REFERENCES school (id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY (teacher_id) REFERENCES teacher (id) ON DELETE SET NULL ON UPDATE CASCADE
+        FOREIGN KEY (teacher_id) REFERENCES teacher (id) ON DELETE SET NULL ON UPDATE CASCADE,
+        UNIQUE (school_id, position, subject_id)
     );
 
 CREATE TABLE

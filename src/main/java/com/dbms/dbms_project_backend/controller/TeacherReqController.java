@@ -1,20 +1,17 @@
 package com.dbms.dbms_project_backend.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dbms.dbms_project_backend.dto.AddTeacherReqDto;
+import com.dbms.dbms_project_backend.dto.UpdateTeacherReqDto;
 import com.dbms.dbms_project_backend.model.Employee;
 import com.dbms.dbms_project_backend.model.TeacherReq;
 import com.dbms.dbms_project_backend.model.User;
@@ -81,5 +78,28 @@ public class TeacherReqController {
 
         TeacherReq savedTeacherReq = teacherReqService.save(teacherReq);
         return ResponseEntity.ok(savedTeacherReq);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TeacherReq> update(@PathVariable Long id,
+            @Valid @RequestBody UpdateTeacherReqDto updateTeacherReqDto) {
+        logService.logRequestAndUser("/teacher-req/{id}", "PUT");
+        TeacherReq existingTeacherReq = teacherReqService.findById(id);
+
+        Optional.ofNullable(updateTeacherReqDto.getSchoolId()).ifPresent(existingTeacherReq::setSchoolId);
+        Optional.ofNullable(updateTeacherReqDto.getPosition()).ifPresent(existingTeacherReq::setPosition);
+        Optional.ofNullable(updateTeacherReqDto.getSubjectId()).ifPresent(existingTeacherReq::setSubjectId);
+        Optional.ofNullable(updateTeacherReqDto.getTeacherId()).ifPresent(existingTeacherReq::setTeacherId);
+
+        TeacherReq updatedSubjectReq = teacherReqService.update(existingTeacherReq);
+        return ResponseEntity.ok(updatedSubjectReq);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        logService.logRequestAndUser("/teacher-req/{id}", "DELETE");
+
+        teacherReqService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

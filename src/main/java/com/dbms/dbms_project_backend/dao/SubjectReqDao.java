@@ -88,4 +88,14 @@ public class SubjectReqDao implements SubjectReqRepository {
         List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, id);
         return !subjectReqs.isEmpty();
     }
+
+    @Override
+    public void setIdByAllFields(SubjectReq subjectReq) {
+        String sql = "SELECT id FROM subject_req WHERE subject_id = ? AND class = ? AND num_lectures = ? AND num_lab = ? AND position = ? AND attendance_criteria = ?";
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, subjectReq.getSubjectId(), subjectReq.getClassLevel(),
+                subjectReq.getNumLecture(), subjectReq.getNumLab(), subjectReq.getTeacherPosition().toString(),
+                subjectReq.getAttendanceCriteria());
+
+        subjectReq.setId(id);
+    }
 }

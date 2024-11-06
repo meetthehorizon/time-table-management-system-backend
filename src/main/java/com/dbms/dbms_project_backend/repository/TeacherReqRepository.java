@@ -15,4 +15,13 @@ public interface TeacherReqRepository {
 
     TeacherReq save(TeacherReq teacherReq);
 
+    public boolean existsByAllFields(TeacherReq teacherReq);
+
+    public void deleteById(Long id);
+
+    public boolean existsById(Long id);
+
+    public TeacherReq update(TeacherReq teacherReq);
+
+    void setByAllFields(TeacherReq teacherReq);
 }

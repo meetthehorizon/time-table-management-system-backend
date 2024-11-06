@@ -16,6 +16,8 @@ public interface SubjectReqRepository {
 
     public boolean existsByAllFields(SubjectReq subjectReq);
 
+    public void setIdByAllFields(SubjectReq subjectReq);
+
     public void deleteById(Long id);
 
     public boolean existsById(Long id);

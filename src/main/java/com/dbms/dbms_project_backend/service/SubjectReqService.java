@@ -43,7 +43,9 @@ public class SubjectReqService {
 
         if (subjectReqRepository.existsByAllFields(subjectReq)) {
             logger.warn("[WARN] Subject requirement with id {} already exists", subjectReq.getId());
-            throw new FieldValueAlreadyExistsException("SubjectReq", "all fields:", subjectReq.toString());
+
+            subjectReqRepository.setIdByAllFields(subjectReq);
+            return subjectReq;
         }
 
         SubjectReq newSubjectReq = subjectReqRepository.save(subjectReq);
@@ -57,7 +59,7 @@ public class SubjectReqService {
 
         if (subjectReqRepository.existsByAllFields(subjectReq)) {
             logger.warn("[WARN] Subject requirement with id {} already exists", subjectReq.getId());
-            throw new FieldValueAlreadyExistsException("SubjectReq", "all fields:", subjectReq.toString());
+            throw new FieldValueAlreadyExistsException("SubjectReq", "all", subjectReq.toString());
         }
 
         SubjectReq updatedSubjectReq = subjectReqRepository.update(subjectReq);
@@ -69,7 +71,7 @@ public class SubjectReqService {
         logger.info("[INFO] Deleting subject requirement with id {}", id);
         if (!subjectReqRepository.existsById(id)) {
             logger.debug("[DEBUG] Subject requirement does not Exists with ID: {}", id);
-            throw new NotFoundException("Subject", "ID", id);
+            throw new NotFoundException("Subject_Req", "ID", id);
         }
         subjectReqRepository.deleteById(id);
         logger.debug("[DEBUG] Subject requirement with id {} deleted successfully", id);

@@ -15,25 +15,25 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class AddSubjectReqDto {
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "Subject ID is required")
     private Long subjectId;
 
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "numLab is required")
     private Integer numLab;
 
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "classLevel should be between 1 and 12")
     @Min(1)
     @Max(12)
     private Integer classLevel;
 
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "numLeacture is required")
     private Integer numLecture;
 
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "attendanceCriteria should be between 0 and 100")
     @Min(0)
     @Max(100)
     private Integer attendanceCriteria;
 
-    @NotNull(message = "School ID is required")
+    @NotNull(message = "teacherPosition is required")
     private String teacherPosition;
 }
