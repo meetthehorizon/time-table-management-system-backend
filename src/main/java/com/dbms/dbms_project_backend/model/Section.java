@@ -7,8 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.time.Year;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +17,7 @@ public class Section {
     private Long id;
     private Long schoolId;
     private Integer classLevel;
-    private Year runningYear;
+    private String runningYear;
     private Long classTeacherId;
     private String section;
 }

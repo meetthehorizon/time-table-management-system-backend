@@ -10,7 +10,6 @@ import com.dbms.dbms_project_backend.repository.CourseRepository;
 
 @Repository
 public class CourseDao implements CourseRepository {
-
 	@Override
 	public List<Course> findAll() {
 		// TODO Auto-generated method stub
@@ -59,4 +58,5 @@ public class CourseDao implements CourseRepository {
 		throw new UnsupportedOperationException("Unimplemented method 'findByUniqueFields'");
 	}
 
+    
 }

@@ -1,7 +1,5 @@
 package com.dbms.dbms_project_backend.dto;
 
-import java.time.Year;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +23,7 @@ public class AddSectionDto {
 
     @NotNull(message = "Running year is required")
     @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
-    private Year runningYear;
+    private String runningYear;
 
     private Long classTeacherId;
 

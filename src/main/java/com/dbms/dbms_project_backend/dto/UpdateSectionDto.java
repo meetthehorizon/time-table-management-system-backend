@@ -1,7 +1,5 @@
 package com.dbms.dbms_project_backend.dto;
 
-import java.time.Year;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -22,7 +20,7 @@ public class UpdateSectionDto {
     private Integer classLevel;
 
     @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
-    private Year runningYear;
+    private String runningYear;
 
     private Long classTeacherId;
 

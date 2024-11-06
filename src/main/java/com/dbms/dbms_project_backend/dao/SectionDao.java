@@ -1,7 +1,6 @@
 package com.dbms.dbms_project_backend.dao;
 
 import java.sql.ResultSet;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +23,7 @@ public class SectionDao implements SectionRepository {
         section.setId(rs.getLong("id"));
         section.setSchoolId(rs.getLong("school_id"));
         section.setClassLevel(rs.getInt("class"));
-
-        int yearValue = rs.getInt("running_year");
-        section.setRunningYear(Year.of(yearValue));
+        section.setRunningYear(rs.getString("running_year"));
 
         section.setClassTeacherId(rs.getLong("class_teacher_id"));
         section.setSection(rs.getString("section"));
@@ -39,7 +36,7 @@ public class SectionDao implements SectionRepository {
         jdbcTemplate.update(sql,
                 section.getSchoolId(),
                 section.getClassLevel(),
-                section.getRunningYear().getValue(),
+                section.getRunningYear(),
                 section.getClassTeacherId(),
                 section.getSection());
 
@@ -82,7 +79,7 @@ public class SectionDao implements SectionRepository {
         jdbcTemplate.update(sql,
                 section.getSchoolId(),
                 section.getClassLevel(),
-                section.getRunningYear().getValue(), // Convert Year to int
+                section.getRunningYear(),
                 section.getClassTeacherId(),
                 section.getSection(),
                 section.getId());
@@ -103,7 +100,7 @@ public class SectionDao implements SectionRepository {
         String sql = "SELECT * FROM sections WHERE school_id = ? AND class = ? AND running_year = ? AND section = ?";
 
         List<Section> sections = jdbcTemplate.query(sql, rowMapper, section.getSchoolId(), section.getClassLevel(),
-                section.getRunningYear().getValue(), section.getSection());
+                section.getRunningYear(), section.getSection());
 
         return !sections.isEmpty();
     }
@@ -114,7 +111,7 @@ public class SectionDao implements SectionRepository {
 
         Section existingSection = jdbcTemplate.queryForObject(sql, rowMapper, section.getSchoolId(),
                 section.getClassLevel(),
-                section.getRunningYear().getValue(), section.getSection());
+                section.getRunningYear(), section.getSection());
 
         return existingSection;
     }
