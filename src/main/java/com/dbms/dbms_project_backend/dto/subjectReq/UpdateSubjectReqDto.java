@@ -1,26 +1,32 @@
-package com.dbms.dbms_project_backend.model;
+package com.dbms.dbms_project_backend.dto.subjectReq;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import com.dbms.dbms_project_backend.model.enumerations.Position;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@ToString
-public class SubjectReq {
-    private Long id;
+public class UpdateSubjectReqDto {
     private Long subjectId;
+
     private Integer numLab;
+
+    @Min(1)
+    @Max(12)
     private Integer classLevel;
+
     private Integer numLecture;
+
+    @Min(0)
+    @Max(100)
     private Integer attendanceCriteria;
-    private Position teacherPosition;
+
+    private String teacherPosition;
 }

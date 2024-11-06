@@ -29,6 +29,13 @@ public class SubjectReqDao implements SubjectReqRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Override
+    public List<SubjectReq> findAll() {
+        String sql = "SELECT * FROM subject_req";
+        List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper);
+        return subjectReqs;
+    }
+
+    @Override
     public Optional<SubjectReq> findById(Long id) {
         String sql = "SELECT * FROM subject_req WHERE id = ?";
         List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, id);
@@ -61,8 +68,24 @@ public class SubjectReqDao implements SubjectReqRepository {
     }
 
     @Override
-    public void delete(SubjectReq subjectReq) {
+    public boolean existsByAllFields(SubjectReq subjectReq) {
+        String sql = "SELECT * FROM subject_req WHERE subject_id = ? AND class = ? AND num_lectures = ? AND num_lab = ? AND position = ? AND attendance_criteria = ?";
+        List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, subjectReq.getSubjectId(),
+                subjectReq.getClassLevel(), subjectReq.getNumLecture(), subjectReq.getNumLab(),
+                subjectReq.getTeacherPosition().toString(), subjectReq.getAttendanceCriteria());
+        return !subjectReqs.isEmpty();
+    }
+
+    @Override
+    public void deleteById(Long id) {
         String sql = "DELETE FROM subject_req WHERE id = ?";
-        jdbcTemplate.update(sql, subjectReq.getId());
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT * FROM subject_req WHERE id = ?";
+        List<SubjectReq> subjectReqs = jdbcTemplate.query(sql, subjectReqRowMapper, id);
+        return !subjectReqs.isEmpty();
     }
 }

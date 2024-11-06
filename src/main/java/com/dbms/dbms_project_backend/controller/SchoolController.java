@@ -24,6 +24,7 @@ import com.dbms.dbms_project_backend.service.SchoolService;
 
 import jakarta.validation.Valid;
 
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
 @RequestMapping("/school")
 @RestController
 public class SchoolController {
@@ -35,7 +36,6 @@ public class SchoolController {
 
     private static final Logger logger = LoggerFactory.getLogger(SchoolController.class);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @GetMapping()
     public ResponseEntity<List<School>> findAll() {
         logService.logRequestAndUser("/school", "GET");
@@ -44,7 +44,6 @@ public class SchoolController {
         return ResponseEntity.ok(schools);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<School> findById(@PathVariable Long id) {
         logService.logRequestAndUser("/school/{id}", "GET");
@@ -53,7 +52,6 @@ public class SchoolController {
         return ResponseEntity.ok(school);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PostMapping()
     public ResponseEntity<School> addSchool(@Valid @RequestBody AddSchoolDto addSchoolDto) {
         logService.logRequestAndUser("/school", "POST");
@@ -66,7 +64,6 @@ public class SchoolController {
         return ResponseEntity.ok(school);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<School> editSchool(@PathVariable Long id, @Valid @RequestBody UpdateSchoolDto updatedSchool) {
         logService.logRequestAndUser("/school/{id}", "PUT");

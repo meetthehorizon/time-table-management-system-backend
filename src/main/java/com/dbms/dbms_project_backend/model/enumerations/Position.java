@@ -17,7 +17,7 @@ public enum Position {
             return Position.valueOf(positionStr);
         } catch (Exception e) {
             logger.warn("[WARN] Position {} not found", positionStr);
-            throw new NotFoundException("Position", "roleName", positionStr);
+            throw new NotFoundException("Position", "name", positionStr);
         }
     }
 }

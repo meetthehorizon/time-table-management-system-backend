@@ -100,6 +100,14 @@ CREATE TABLE
         subject_id INT,
         position ENUM ('PRT', 'TGT', 'PGT'),
         attendance_criteria INT,
+        UNIQUE (
+            class,
+            num_lectures,
+            num_lab,
+            subject_id,
+            position,
+            attendance_criteria
+        ),
         PRIMARY KEY (id),
         CHECK (class BETWEEN 1 AND 12),
         CHECK (attendance_criteria BETWEEN 0 AND 100),
@@ -179,4 +187,4 @@ CREATE TABLE
         FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-SHOW TABLES;    
+SHOW TABLES;

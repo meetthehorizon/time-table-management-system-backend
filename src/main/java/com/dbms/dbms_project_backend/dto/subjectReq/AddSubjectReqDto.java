@@ -1,7 +1,5 @@
 package com.dbms.dbms_project_backend.dto.subjectReq;
 
-import com.dbms.dbms_project_backend.model.enumerations.Position;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +14,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SubjectReqDto {
+public class AddSubjectReqDto {
     @NotNull
     private Long subjectId;
 
@@ -37,5 +35,5 @@ public class SubjectReqDto {
     private Integer attendanceCriteria;
 
     @NotNull
-    private Position teacherPosition;
+    private String teacherPosition;
 }

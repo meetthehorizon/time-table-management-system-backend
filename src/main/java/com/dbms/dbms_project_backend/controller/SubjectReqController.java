@@ -1,5 +1,8 @@
 package com.dbms.dbms_project_backend.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dbms.dbms_project_backend.dto.subjectReq.AddSubjectReqDto;
+import com.dbms.dbms_project_backend.dto.subjectReq.UpdateSubjectReqDto;
 import com.dbms.dbms_project_backend.model.SubjectReq;
+import com.dbms.dbms_project_backend.model.enumerations.Position;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SubjectReqService;
 
@@ -28,6 +34,14 @@ public class SubjectReqController {
     @Autowired
     private SubjectReqService subjectReqService;
 
+    @GetMapping
+    public ResponseEntity<List<SubjectReq>> getSubjectReqs() {
+        logService.logRequestAndUser("/subject-req", "GET");
+
+        List<SubjectReq> subjectReqs = subjectReqService.findAll();
+        return ResponseEntity.ok(subjectReqs);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<SubjectReq> getSubjectReq(@PathVariable Long id) {
         logService.logRequestAndUser("/subject-req/{id}", "GET");
@@ -37,26 +51,43 @@ public class SubjectReqController {
     }
 
     @PostMapping
-    public ResponseEntity<SubjectReq> createSubjectReq(@Valid @RequestBody SubjectReq subjectReq) {
+    public ResponseEntity<SubjectReq> createSubjectReq(@Valid @RequestBody AddSubjectReqDto addSubjectReq) {
         logService.logRequestAndUser("/subject-req", "POST");
 
-        SubjectReq newSubjectReq = subjectReqService.save(subjectReq);
-        return ResponseEntity.ok(newSubjectReq);
+        SubjectReq subjectReq = new SubjectReq();
+        subjectReq.setSubjectId(addSubjectReq.getSubjectId()).setNumLab(addSubjectReq.getNumLab())
+                .setClassLevel(addSubjectReq.getClassLevel()).setNumLecture(addSubjectReq.getNumLecture())
+                .setAttendanceCriteria(addSubjectReq.getAttendanceCriteria())
+                .setTeacherPosition(Position.fromString(addSubjectReq.getTeacherPosition()));
+
+        subjectReq = subjectReqService.save(subjectReq);
+        return ResponseEntity.ok(subjectReq);
     }
 
-    @PutMapping
-    public ResponseEntity<SubjectReq> updateSubjectReq(@Valid @RequestBody SubjectReq subjectReq) {
-        logService.logRequestAndUser("/subject-req", "PUT");
+    @PutMapping("/{id}")
+    public ResponseEntity<SubjectReq> updateSubjectReq(@PathVariable Long id,
+            @Valid @RequestBody UpdateSubjectReqDto updateSubjectReqDto) {
+        logService.logRequestAndUser("/subject-req/{id}", "PUT");
+        SubjectReq existingSubjectReq = subjectReqService.findById(id);
 
-        SubjectReq updatedSubjectReq = subjectReqService.update(subjectReq);
+        Optional.ofNullable(updateSubjectReqDto.getSubjectId()).ifPresent(existingSubjectReq::setSubjectId);
+        Optional.ofNullable(updateSubjectReqDto.getNumLab()).ifPresent(existingSubjectReq::setNumLab);
+        Optional.ofNullable(updateSubjectReqDto.getClassLevel()).ifPresent(existingSubjectReq::setClassLevel);
+        Optional.ofNullable(updateSubjectReqDto.getNumLecture()).ifPresent(existingSubjectReq::setNumLecture);
+        Optional.ofNullable(updateSubjectReqDto.getAttendanceCriteria())
+                .ifPresent(existingSubjectReq::setAttendanceCriteria);
+        Optional.ofNullable(updateSubjectReqDto.getTeacherPosition()).ifPresent(
+                teacherPosition -> existingSubjectReq.setTeacherPosition(Position.fromString(teacherPosition)));
+
+        SubjectReq updatedSubjectReq = subjectReqService.update(existingSubjectReq);
         return ResponseEntity.ok(updatedSubjectReq);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteSubjectReq( @Valid @RequestBody SubjectReq subjectReq) {
-        logService.logRequestAndUser("/subject-req", "DELETE");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSubjectReq(@PathVariable Long id) {
+        logService.logRequestAndUser("/subject-req/{id}", "DELETE");
 
-        subjectReqService.delete(subjectReq);
-        return ResponseEntity.ok("Subject requirement deleted successfully");
+        subjectReqService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
