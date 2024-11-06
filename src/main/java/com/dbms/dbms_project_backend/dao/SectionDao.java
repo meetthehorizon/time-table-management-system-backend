@@ -16,7 +16,6 @@ import com.dbms.dbms_project_backend.repository.SectionRepository;
 
 @Repository
 public class SectionDao implements SectionRepository {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -24,7 +23,7 @@ public class SectionDao implements SectionRepository {
         Section section = new Section();
         section.setId(rs.getLong("id"));
         section.setSchoolId(rs.getLong("school_id"));
-        section.setClassLevel(rs.getByte("class"));
+        section.setClassLevel(rs.getInt("class"));
 
         int yearValue = rs.getInt("running_year");
         section.setRunningYear(Year.of(yearValue));
@@ -127,5 +126,4 @@ public class SectionDao implements SectionRepository {
 
         return !sections.isEmpty();
     }
-
 }

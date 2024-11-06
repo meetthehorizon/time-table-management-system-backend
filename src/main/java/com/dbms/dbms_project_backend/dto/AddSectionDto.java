@@ -2,6 +2,8 @@ package com.dbms.dbms_project_backend.dto;
 
 import java.time.Year;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -17,9 +19,9 @@ public class AddSectionDto {
     @NotNull(message = "School id is required")
     private Long schoolId;
 
-    @NotNull(message = "Class level is required")
-    @Pattern(regexp = "^(1[0-2]|[1-9])$", message = "Class level must be between 1 and 12")
-    private Byte classLevel;
+    @Min(value = 1, message = "Class level must be at least 1")
+    @Max(value = 12, message = "Class level must be at most 12")
+    private Integer classLevel;
 
     @NotNull(message = "Running year is required")
     @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")

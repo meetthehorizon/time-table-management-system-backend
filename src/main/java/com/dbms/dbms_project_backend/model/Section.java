@@ -18,7 +18,7 @@ import java.time.Year;
 public class Section {
     private Long id;
     private Long schoolId;
-    private Byte classLevel;
+    private Integer classLevel;
     private Year runningYear;
     private Long classTeacherId;
     private String section;
