@@ -25,7 +25,6 @@ public class AddSectionDto {
     @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
     private Year runningYear;
 
-    @NotNull(message = "Class teacher id is required")
     private Long classTeacherId;
 
     @NotNull(message = "Section is required")

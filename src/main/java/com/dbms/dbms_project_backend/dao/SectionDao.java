@@ -56,14 +56,14 @@ public class SectionDao implements SectionRepository {
     @Override
     public List<Section> findAll() {
 
-        String sql = "SELECT * FROM section";
+        String sql = "SELECT * FROM sections";
         List<Section> sections = jdbcTemplate.query(sql, rowMapper);
         return sections;
     }
 
     @Override
     public Optional<Section> findById(Long id) {
-        String sql = "SELECT * FROM  section WHERE id = ?";
+        String sql = "SELECT * FROM  sections WHERE id = ?";
         List<Section> sections = jdbcTemplate.query(sql, rowMapper, id);
 
         if (sections.isEmpty()) {
@@ -75,7 +75,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM section WHERE id = ?";
+        String sql = "DELETE FROM sections WHERE id = ?";
         jdbcTemplate.update(sql, id);
 
     }
@@ -96,7 +96,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public List<Section> findBySchoolId(Long id) {
-        String sql = "SELECT * FROM section WHERE school_id = ?";
+        String sql = "SELECT * FROM sections WHERE school_id = ?";
         List<Section> sections = jdbcTemplate.query(sql, rowMapper, id);
 
         return sections;
@@ -104,7 +104,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public boolean existsByUniqueFields(Section section) {
-        String sql = "SELECT * FROM section WHERE school_id = ? AND class = ? AND running_year = ? AND section = ?";
+        String sql = "SELECT * FROM sections WHERE school_id = ? AND class = ? AND running_year = ? AND section = ?";
 
         List<Section> sections = jdbcTemplate.query(sql, rowMapper, section.getSchoolId(), section.getClassLevel(),
                 section.getRunningYear().getValue(), section.getSection());
@@ -114,7 +114,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public Section findByUniqueFields(Section section) {
-        String sql = "SELECT * FROM section WHERE school_id = ? AND class = ? AND running_year = ? AND section = ?";
+        String sql = "SELECT * FROM sections WHERE school_id = ? AND class = ? AND running_year = ? AND section = ?";
 
         Section existingSection = jdbcTemplate.queryForObject(sql, rowMapper, section.getSchoolId(),
                 section.getClassLevel(),
@@ -125,7 +125,7 @@ public class SectionDao implements SectionRepository {
 
     @Override
     public boolean existsById(Long id) {
-        String sql = "SELECT * FROM section WHERE id = ?";
+        String sql = "SELECT * FROM sections WHERE id = ?";
         List<Section> sections = jdbcTemplate.query(sql, rowMapper, id);
 
         return !sections.isEmpty();
