@@ -83,4 +83,16 @@ public class EnrollmentDao implements EnrollmentRepository {
         String sql = "DELETE FROM enrollment WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public Enrollment findByStudentIdAndRunningYear(Long studentId, String runningYear) {
+        String sql = "SELECT * FROM enrollment e JOIN section s ON e.section_id = s.id WHERE e.student_id = ? AND s.running_year = ?";
+        List<Enrollment> enrollment = jdbcTemplate.query(sql, rowMapper, studentId, runningYear);
+
+        if (enrollment.isEmpty()) {
+            return null;
+        } else {
+            return enrollment.get(0);
+        }
+    }
 }

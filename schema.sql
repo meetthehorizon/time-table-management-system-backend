@@ -168,8 +168,8 @@ CREATE TABLE
     slots (
         id BIGINT AUTO_INCREMENT,
         course_id BIGINT,
-        start_time TIME,
-        end_time TIME,
+        start_time INTEGER,
+        end_time INTEGER,
         day ENUM ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'),
         PRIMARY KEY (id),
         FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE CASCADE ON UPDATE CASCADE

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.Enrollment;
+import com.dbms.dbms_project_backend.model.Section;
 import com.dbms.dbms_project_backend.repository.EnrollmentRepository;
 import com.dbms.dbms_project_backend.repository.SectionRepository;
 import com.dbms.dbms_project_backend.repository.UserRepository;
@@ -82,6 +83,18 @@ public class EnrollmentService {
             }
         }
 
+        Section section = sectionRepository.findById(enrollment.getSectionId()).get();
+
+        Enrollment existingEnrollment = enrollmentRepository.findByStudentIdAndRunningYear(enrollment.getStudentId(),
+                section.getRunningYear());
+        if (existingEnrollment != null) {
+            if (existingEnrollment.getId().equals(enrollment.getId())) {
+                logger.warn("[WARN] Student with id {} is already enrolled in a section of the same year",
+                        enrollment.getStudentId());
+                throw new FieldValueAlreadyExistsException("Student", "id", enrollment.getStudentId());
+            }
+        }
+
         Enrollment updatedEnrollment = enrollmentRepository.save(enrollment);
         logger.debug("[DEBUG] Enrollment updated with id: {}", updatedEnrollment.getId());
 
@@ -97,9 +110,13 @@ public class EnrollmentService {
         sectionRepository.findById(enrollment.getStudentId())
                 .orElseThrow(() -> new NotFoundException("User", "id", enrollment.getStudentId()));
 
-        if (enrollmentRepository.existsByUniqueFields(enrollment)) {
-            logger.warn("[WARN] Enrollment with id {} already exists", enrollment.getId());
-            throw new FieldValueAlreadyExistsException("Enrollment", "all", enrollment.toString());
+        Section section = sectionRepository.findById(enrollment.getSectionId()).get();
+        Enrollment existingEnrollment = enrollmentRepository.findByStudentIdAndRunningYear(enrollment.getStudentId(),
+                section.getRunningYear());
+        if (existingEnrollment != null) {
+            logger.warn("[WARN] Student with id {} is already enrolled in a section of the same year",
+                    enrollment.getStudentId());
+            throw new FieldValueAlreadyExistsException("Student", "id", enrollment.getStudentId());
         }
 
         Enrollment newEnrollment = enrollmentRepository.save(enrollment);

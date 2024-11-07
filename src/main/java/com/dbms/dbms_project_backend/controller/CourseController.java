@@ -48,7 +48,7 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         logService.logRequestAndUser("/course", "DELETE");
 

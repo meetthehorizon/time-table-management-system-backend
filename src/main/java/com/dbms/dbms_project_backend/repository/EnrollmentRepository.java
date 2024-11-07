@@ -22,4 +22,6 @@ public interface EnrollmentRepository {
     public boolean existsByUniqueFields(Enrollment enrollment);
 
     public Enrollment findByUniqueFields(Enrollment enrollment);
+
+    public Enrollment findByStudentIdAndRunningYear(Long studentId, String runningYear);
 }
