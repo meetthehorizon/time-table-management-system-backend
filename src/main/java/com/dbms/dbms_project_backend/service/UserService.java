@@ -10,6 +10,7 @@ import com.dbms.dbms_project_backend.dto.RegisterUserDto;
 import com.dbms.dbms_project_backend.exception.FieldValueAlreadyExistsException;
 import com.dbms.dbms_project_backend.exception.NotFoundException;
 import com.dbms.dbms_project_backend.model.User;
+import com.dbms.dbms_project_backend.model.enumerations.Role;
 import com.dbms.dbms_project_backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,15 @@ public class UserService {
 
         List<User> users = userRepository.findAllBySchoolId(id);
         logger.debug("[DEBUG] Fetched all Users by school id: {}", id);
+
+        return users;
+    }
+
+    public List<User> findAllByRole(Role role) {
+        logger.info("[INFO] Fetching all Users by role: {}", role);
+
+        List<User> users = userRepository.findAllByRole(role);
+        logger.debug("[DEBUG] Fetched all Users by role: {}", role);
 
         return users;
     }

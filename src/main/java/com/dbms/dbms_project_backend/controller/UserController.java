@@ -123,4 +123,13 @@ public class UserController {
     userService.deleteUser(id);
     return ResponseEntity.noContent().build();
   }
+
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_GENERAL_MANAGER')")
+  @GetMapping("/students")
+  public ResponseEntity<List<User>> getStudents() {
+    logService.logRequestAndUser("/users/students", "GET");
+
+    List<User> students = userService.findAllByRole(Role.ROLE_STUDENT);
+    return ResponseEntity.ok(students);
+  }
 }
