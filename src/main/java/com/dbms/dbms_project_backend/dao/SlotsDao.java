@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.dbms.dbms_project_backend.model.Slots;
 import com.dbms.dbms_project_backend.model.enumerations.Day;
 import com.dbms.dbms_project_backend.repository.SlotsRepository;
 
+@Repository
 public class SlotsDao implements SlotsRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
