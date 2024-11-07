@@ -134,11 +134,19 @@ public class UserDao implements UserRepository {
                 SELECT * FROM users
                 WHERE id IN (
                     SELECT id FROM employee WHERE school_id = ?
+                    UNION
+                    SELECT teacher_id FROM teacher_req WHERE school_id = ?
+                    UNION
+                    SELECT student_id FROM enrollment
+                    WHERE section_id IN (
+                        SELECT id FROM sections WHERE school_id = ?
+                    )
                 )
                 """;
 
-        List<User> users = jdbcTemplate.query(sql, rowMapper, id);
-        users.forEach((user) -> user.setRoles(userRolesRepository.getRolesByUser(user)));
+        List<User> users = jdbcTemplate.query(sql, rowMapper, id, id, id);
+        users.forEach(user -> user.setRoles(userRolesRepository.getRolesByUser(user)));
+
         return users;
     }
 
