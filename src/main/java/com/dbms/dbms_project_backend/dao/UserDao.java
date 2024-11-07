@@ -159,7 +159,7 @@ public class UserDao implements UserRepository {
 
     @Override
     public List<User> findAllByRole(Role role) {
-        String sql = "SELECT * FROM users WHERE id IN (SELECT user_id FROM user_roles WHERE role = ?)";
+        String sql = "SELECT * FROM users WHERE id IN (SELECT user_id FROM user_roles WHERE role_name = ?)";
         List<User> users = jdbcTemplate.query(sql, rowMapper, role.name());
         users.forEach(user -> user.setRoles(userRolesRepository.getRolesByUser(user)));
         return users;
