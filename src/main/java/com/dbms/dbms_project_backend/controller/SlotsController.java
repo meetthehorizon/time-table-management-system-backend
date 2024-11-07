@@ -48,6 +48,14 @@ public class SlotsController {
         return ResponseEntity.ok(slots);
     }
 
+    @GetMapping("teacher-req/{teacherReqId}")
+    public ResponseEntity<List<Slots>> findByTeacherId(@PathVariable Long teacherReqId) {
+        logService.logRequestAndUser("/slots/teacher/" + teacherReqId, "GET");
+
+        List<Slots> slots = slotsService.findByTeacherReqId(teacherReqId);
+        return ResponseEntity.ok(slots);
+    }
+
     @PostMapping
     public ResponseEntity<Slots> save(@Valid @RequestBody AddSlotsDto addSlotDto) {
         logService.logRequestAndUser("/slots", "POST");

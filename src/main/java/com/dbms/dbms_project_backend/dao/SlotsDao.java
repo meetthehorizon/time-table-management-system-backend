@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.dbms.dbms_project_backend.model.Slots;
 import com.dbms.dbms_project_backend.model.enumerations.Day;
 import com.dbms.dbms_project_backend.repository.SlotsRepository;
 
+@Repository
 public class SlotsDao implements SlotsRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -66,5 +68,13 @@ public class SlotsDao implements SlotsRepository {
     public void deleteById(Long id) {
         String sql = "DELETE FROM slots WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public List<Slots> findByTeacherReqId(Long teacherId) {
+        String sql = "SELECT s.* FROM slots s JOIN courses c ON s.course_id = c.id WHERE c.teacher_req_id = ?";
+
+        List<Slots> slots = jdbcTemplate.query(sql, rowMapper, teacherId);
+        return slots;
     }
 }
