@@ -69,4 +69,12 @@ public class SlotsDao implements SlotsRepository {
         String sql = "DELETE FROM slots WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public List<Slots> findByTeacherReqId(Long teacherId) {
+        String sql = "SELECT s.* FROM slots s JOIN courses c ON s.course_id = c.id WHERE c.teacher_req_id = ?";
+
+        List<Slots> slots = jdbcTemplate.query(sql, rowMapper, teacherId);
+        return slots;
+    }
 }

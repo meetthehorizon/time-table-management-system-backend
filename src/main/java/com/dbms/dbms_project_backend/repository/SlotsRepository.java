@@ -15,4 +15,6 @@ public interface SlotsRepository {
     Optional<Slots> findById(Long id);
 
     void deleteById(Long id);
+
+    List<Slots> findByTeacherReqId(Long teacherId);
 }

@@ -16,10 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dbms.dbms_project_backend.dto.AddSlotsDto;
 import com.dbms.dbms_project_backend.dto.UpdateSlotsDto;
+import com.dbms.dbms_project_backend.model.Course;
 import com.dbms.dbms_project_backend.model.Slots;
+import com.dbms.dbms_project_backend.model.SubjectReq;
 import com.dbms.dbms_project_backend.model.enumerations.Day;
+import com.dbms.dbms_project_backend.response.SlotResponse;
+import com.dbms.dbms_project_backend.service.CourseService;
 import com.dbms.dbms_project_backend.service.LogService;
 import com.dbms.dbms_project_backend.service.SlotsService;
+import com.dbms.dbms_project_backend.service.SubjectReqService;
+import com.dbms.dbms_project_backend.service.SubjectService;
+import com.dbms.dbms_project_backend.service.TeacherReqService;
 
 import jakarta.validation.Valid;
 
@@ -30,26 +37,61 @@ public class SlotsController {
     private LogService logService;
 
     @Autowired
+    private CourseService courseService;
+
+    @Autowired
+    private SubjectReqService subjectReqService;
+
+    @Autowired
+    private TeacherReqService teacherReqService;
+
+    @Autowired
+    private SubjectService subjectService;
+
+    @Autowired
     private SlotsService slotsService;
 
+    private SlotResponse convertSlotToSlotResponse(Slots slot) {
+        SlotResponse slotResponse = new SlotResponse().setSlots(slot);
+        Course course = courseService.findById(slot.getCourseId());
+        SubjectReq subjectReq = subjectReqService.findById(course.getSubjectReqId());
+
+        slotResponse.setSubject(subjectService.findById(subjectReq.getSubjectId()));
+        slotResponse.setTeacherReq(teacherReqService.findById(course.getTeacherReqId()));
+
+        return slotResponse;
+    }
+
     @GetMapping("{id}")
-    public ResponseEntity<Slots> findById(@PathVariable Long id) {
+    public ResponseEntity<SlotResponse> findById(@PathVariable Long id) {
         logService.logRequestAndUser("/slots/" + id, "GET");
 
         Slots slots = slotsService.findById(id);
-        return ResponseEntity.ok(slots);
+        return ResponseEntity.ok(convertSlotToSlotResponse(slots));
     }
 
     @GetMapping("section/{sectionId}")
-    public ResponseEntity<List<Slots>> findBySectionId(@PathVariable Long sectionId) {
+    public ResponseEntity<List<SlotResponse>> findBySectionId(@PathVariable Long sectionId) {
         logService.logRequestAndUser("/slots/section/" + sectionId, "GET");
 
         List<Slots> slots = slotsService.findBySectionId(sectionId);
-        return ResponseEntity.ok(slots);
+        List<SlotResponse> slotResponses = slots.stream().map(this::convertSlotToSlotResponse).toList();
+
+        return ResponseEntity.ok(slotResponses);
+    }
+
+    @GetMapping("teacher-req/{teacherReqId}")
+    public ResponseEntity<List<SlotResponse>> findByTeacherId(@PathVariable Long teacherReqId) {
+        logService.logRequestAndUser("/slots/teacher/" + teacherReqId, "GET");
+
+        List<Slots> slots = slotsService.findByTeacherReqId(teacherReqId);
+        List<SlotResponse> slotResponses = slots.stream().map(this::convertSlotToSlotResponse).toList();
+
+        return ResponseEntity.ok(slotResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Slots> save(@Valid @RequestBody AddSlotsDto addSlotDto) {
+    public ResponseEntity<SlotResponse> save(@Valid @RequestBody AddSlotsDto addSlotDto) {
         logService.logRequestAndUser("/slots", "POST");
 
         Slots newSlot = new Slots().setCourseId(addSlotDto.getCourseId()).setDay(Day.fromString(addSlotDto.getDay()))
@@ -62,11 +104,12 @@ public class SlotsController {
         }
 
         Slots savedSlot = slotsService.save(newSlot);
-        return ResponseEntity.ok(savedSlot);
+        return ResponseEntity.ok(convertSlotToSlotResponse(savedSlot));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Slots> update(@PathVariable Long id, @Valid @RequestBody UpdateSlotsDto updateSlotDto) {
+    public ResponseEntity<SlotResponse> update(@PathVariable Long id,
+            @Valid @RequestBody UpdateSlotsDto updateSlotDto) {
         logService.logRequestAndUser("/slots/" + id, "PUT");
 
         Slots existingSlot = slotsService.findById(id).setStartTime(updateSlotDto.getStartTime())
@@ -81,7 +124,7 @@ public class SlotsController {
         }
 
         Slots updatedSlot = slotsService.update(existingSlot);
-        return ResponseEntity.ok(updatedSlot);
+        return ResponseEntity.ok(convertSlotToSlotResponse(updatedSlot));
     }
 
     @DeleteMapping("/{id}")

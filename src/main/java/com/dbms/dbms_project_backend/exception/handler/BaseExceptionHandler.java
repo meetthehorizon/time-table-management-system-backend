@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Order(10)
+@Order(3)
 @RestControllerAdvice
 public class BaseExceptionHandler {
     @ExceptionHandler(Exception.class)
@@ -14,5 +14,12 @@ public class BaseExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatus(500);
         problemDetail.setDetail(e.getMessage());
         return ResponseEntity.status(500).body(problemDetail);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(400);
+        problemDetail.setDetail(e.getMessage());
+        return ResponseEntity.status(400).body(problemDetail);
     }
 }
