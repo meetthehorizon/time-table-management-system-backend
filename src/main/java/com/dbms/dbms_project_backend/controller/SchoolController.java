@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,5 +83,14 @@ public class SchoolController {
 
     schoolService.update(existingSchool);
     return ResponseEntity.ok(existingSchool);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteSchool(@PathVariable Long id) {
+    logService.logRequestAndUser("/school" + id, "DELETE");
+
+    logger.info("[INFO] Deleting School with schoolId: {}", id);
+    schoolService.delete(id);
+    return ResponseEntity.ok().build();
   }
 }

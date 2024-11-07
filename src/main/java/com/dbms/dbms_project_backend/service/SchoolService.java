@@ -80,4 +80,9 @@ public class SchoolService {
 
         return updatedSchool;
     }
+
+    public void delete(Long id) {
+        logger.info("[INFO] Deleting School with id: {}", id);
+        schoolRepository.deleteById(id);
+    }
 }
