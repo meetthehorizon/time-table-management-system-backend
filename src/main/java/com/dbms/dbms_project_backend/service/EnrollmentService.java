@@ -91,11 +91,15 @@ public class EnrollmentService {
     public Enrollment save(Enrollment enrollment) {
         logger.info("[INFO] Saving enrollment with id: {}", enrollment.getId());
 
-        sectionRepository.findById(enrollment.getSectionId())
-                .orElseThrow(() -> new NotFoundException("Section", "id", enrollment.getSectionId()));
+        Optional.ofNullable(enrollment.getSectionId()).ifPresent(sectionId -> {
+            sectionRepository.findById(sectionId)
+                    .orElseThrow(() -> new NotFoundException("Section", "id", sectionId));
+        });
 
-        sectionRepository.findById(enrollment.getStudentId())
-                .orElseThrow(() -> new NotFoundException("User", "id", enrollment.getStudentId()));
+        Optional.ofNullable(enrollment.getStudentId()).ifPresent(studentId -> {
+            userRepository.findById(studentId)
+                    .orElseThrow(() -> new NotFoundException("User", "id", studentId));
+        });
 
         if (enrollmentRepository.existsByUniqueFields(enrollment)) {
             logger.warn("[WARN] Enrollment with id {} already exists", enrollment.getId());

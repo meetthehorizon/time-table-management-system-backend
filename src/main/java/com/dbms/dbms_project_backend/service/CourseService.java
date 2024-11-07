@@ -48,6 +48,12 @@ public class CourseService {
         }
     }
 
+    public List<Course> findBySchoolId(Long id) {
+        logger.info("[INFO] Fetching Courses with School id: {}", id);
+        return courseRepository.findBySchoolId(id);
+
+    }
+
     public void deleteById(Long id) {
         logger.info("[INFO] Deleting Course with id: {}", id);
         courseRepository.deleteById(id);

@@ -86,4 +86,11 @@ public class CourseDao implements CourseRepository {
 				course.getSubjectReqId());
 		return existingCourse;
 	}
+
+	@Override
+	public List<Course> findBySchoolId(Long id) {
+		String sql = "SELECT * FROM courses WHERE section_id IN (SELECT id FROM sections WHERE school_id = ?)";
+		List<Course> courses = jdbcTemplate.query(sql, rowMapper, id);
+		return courses;
+	}
 }
