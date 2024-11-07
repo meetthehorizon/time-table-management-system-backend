@@ -40,6 +40,14 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
+    @GetMapping("/school/{id}")
+    public ResponseEntity<List<Course>> findBySchoolId(@PathVariable Long id) {
+        logService.logRequestAndUser("/course/school/" + id, "GET");
+
+        List<Course> courses = courseService.findBySchoolId(id);
+        return ResponseEntity.ok(courses);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Course> findById(@PathVariable Long id) {
         logService.logRequestAndUser("/course/" + id, "GET");

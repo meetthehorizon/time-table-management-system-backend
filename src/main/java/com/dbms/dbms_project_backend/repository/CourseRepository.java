@@ -22,4 +22,6 @@ public interface CourseRepository {
 
     public Course findByUniqueFields(Course course);
 
+    public List<Course> findBySchoolId(Long id);
+
 }
