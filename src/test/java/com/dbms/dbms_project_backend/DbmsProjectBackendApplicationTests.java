@@ -9,5 +9,4 @@ class DbmsProjectBackendApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

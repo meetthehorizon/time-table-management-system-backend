@@ -1,21 +1,21 @@
-package com.dbms.dbms_project_backend.model;
+package com.dbms.dbms_project_backend.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true)
-@ToString
-public class Course {
-    private Long id;
+public class AddCourseDto {
+    @NotNull(message = "Section ID is required")
     private Long sectionId;
+
+    @NotNull(message = "Subject Requirement ID is required")
     private Long subjectReqId;
+
     private Long teacherReqId;
 }

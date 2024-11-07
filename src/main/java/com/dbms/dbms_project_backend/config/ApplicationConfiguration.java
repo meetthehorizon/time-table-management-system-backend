@@ -1,5 +1,6 @@
 package com.dbms.dbms_project_backend.config;
 
+import com.dbms.dbms_project_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.dbms.dbms_project_backend.repository.UserRepository;
-
 @Configuration
 public class ApplicationConfiguration {
     @Autowired
@@ -20,8 +19,8 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> userRepository.findByEmail(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean

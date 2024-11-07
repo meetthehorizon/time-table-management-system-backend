@@ -142,10 +142,10 @@ public class UserDao implements UserRepository {
         return users;
     }
 
-	@Override
-	public boolean existsById(Long id) {
+    @Override
+    public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM users WHERE id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count > 0;
-	}
+    }
 }

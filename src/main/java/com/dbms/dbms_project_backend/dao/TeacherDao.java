@@ -72,9 +72,9 @@ public class TeacherDao implements TeacherRepository {
     }
 
     @Override
-    public boolean existsById(Long id){
+    public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM teacher WHERE id = ?";
-        return  jdbcTemplate.queryForObject(sql,Integer.class,id)>0;
+        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 
 }

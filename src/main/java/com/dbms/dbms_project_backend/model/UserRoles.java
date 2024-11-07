@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,9 +15,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 
 public class UserRoles {
-    private Long userRoleId; 
-    private Long userId; 
-    private Role roleName; 
+    private Long userRoleId;
+    private Long userId;
+    private Role roleName;
 
     public User toUser(User user) {
         user.addRole(this.roleName);

@@ -160,7 +160,8 @@ CREATE TABLE
         PRIMARY KEY (id),
         FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (subject_req_id) REFERENCES subject_req (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY (teacher_req_id) REFERENCES teacher_req (id) ON DELETE SET NULL ON UPDATE CASCADE
+        FOREIGN KEY (teacher_req_id) REFERENCES teacher_req (id) ON DELETE SET NULL ON UPDATE CASCADE,
+        UNIQUE (section_id, subject_req_id)
     );
 
 CREATE TABLE

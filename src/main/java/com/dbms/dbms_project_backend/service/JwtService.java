@@ -56,8 +56,7 @@ public class JwtService {
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
-            long expiration
-    ) {
+            long expiration) {
         logger.debug("[DEBUG] Building token for user: {}", userDetails.getUsername());
         return Jwts
                 .builder()

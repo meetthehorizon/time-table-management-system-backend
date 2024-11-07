@@ -14,19 +14,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddSectionDto {
-    @NotNull(message = "School id is required")
-    private Long schoolId;
+  @NotNull(message = "School id is required")
+  private Long schoolId;
 
-    @Min(value = 1, message = "Class level must be at least 1")
-    @Max(value = 12, message = "Class level must be at most 12")
-    @NotNull(message = "Class level is required")
-    private Integer classLevel;
+  @Min(value = 1, message = "Class level must be at least 1")
+  @Max(value = 12, message = "Class level must be at most 12")
+  @NotNull(message = "Class level is required")
+  private Integer classLevel;
 
-    @NotNull(message = "Running year is required")
-    @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
-    private String runningYear;
+  @NotNull(message = "Running year is required")
+  @Pattern(regexp = "^(20\\d{2})$", message = "Running year must be a 4 digit integer from 2000")
+  private String runningYear;
 
-    @NotNull(message = "Section is required")
-    @Pattern(regexp = "^[A-Z]$", message = "Section must be a capital letter from A to Z")
-    private String section;
+  @NotNull(message = "Section is required")
+  @Pattern(regexp = "^[A-Z]$", message = "Section must be a capital letter from A to Z")
+  private String section;
 }

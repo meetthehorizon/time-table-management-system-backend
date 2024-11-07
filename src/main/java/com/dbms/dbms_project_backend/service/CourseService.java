@@ -18,7 +18,6 @@ import com.dbms.dbms_project_backend.repository.TeacherReqRepository;
 
 @Service
 public class CourseService {
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -82,33 +81,39 @@ public class CourseService {
             Course existingCourse = courseRepository.findByUniqueFields(course);
 
             if (!existingCourse.getId().equals(course.getId())) {
-            logger.warn("[WARN] Course already exists: " + course.toString());
-            throw new FieldValueAlreadyExistsException("Course", "all", course.toString());
+                logger.warn("[WARN] Course already exists: " + course.toString());
+                throw new FieldValueAlreadyExistsException("Course", "all", course.toString());
             }
         }
 
-        Course updatedCourse = courseRepository.save(course);
+        Course updatedCourse = courseRepository.update(course);
         logger.debug("[DEBUG] Updated Course with id: {}", course.getId());
         return updatedCourse;
     }
 
     public Course add(Course course) {
-        logger.info("[INFO] Adding new Course");
+        logger.info("[INFO] Adding new Course with id: {}", course.getId());
 
-        if (!sectionRepository.existsById(course.getSectionId())) {
-            logger.debug("[DEBUG] No Section with id: {}", course.getSectionId());
-            throw new NotFoundException("Section", "id", course.getSectionId());
-        }
+        Optional.ofNullable(course.getSectionId()).ifPresent(sectionId -> {
+            if (!sectionRepository.existsById(sectionId)) {
+                logger.debug("[DEBUG] No Section with id: {}", sectionId);
+                throw new NotFoundException("Section", "id", sectionId);
+            }
+        });
 
-        if (!subjectReqRepository.existsById(course.getSubjectReqId())) {
-            logger.debug("[DEBUG] No Subject Requirement with id: {}", course.getSubjectReqId());
-            throw new NotFoundException("Subject Requirement", "id", course.getSubjectReqId());
-        }
+        Optional.ofNullable(course.getSubjectReqId()).ifPresent(subjectReqId -> {
+            if (!subjectReqRepository.existsById(subjectReqId)) {
+                logger.debug("[DEBUG] No Subject Requirement with id: {}", subjectReqId);
+                throw new NotFoundException("Subject Requirement", "id", subjectReqId);
+            }
+        });
 
-        if (!teacherReqRepository.existsById(course.getTeacherReqId())) {
-            logger.debug("[DEBUG] No Teacher Requirement with id: {}", course.getTeacherReqId());
-            throw new NotFoundException("Teacher Requirement", "id", course.getTeacherReqId());
-        }
+        Optional.ofNullable(course.getTeacherReqId()).ifPresent(teacherReqId -> {
+            if (!teacherReqRepository.existsById(teacherReqId)) {
+                logger.debug("[DEBUG] No Teacher Requirement with id: {}", teacherReqId);
+                throw new NotFoundException("Teacher Requirement", "id", teacherReqId);
+            }
+        });
 
         if (courseRepository.existsByUniqueFields(course)) {
             logger.warn("[WARN] Course already exists: " + course.toString());
@@ -117,6 +122,43 @@ public class CourseService {
 
         Course newCourse = courseRepository.save(course);
         logger.debug("[DEBUG] Added new Course with id: {}", newCourse.getId());
+        return newCourse;
+    }
+
+    public Course save(Course course) {
+        logger.info("[INFO] Saving Course with id: {}", course.getId());
+
+        Optional.ofNullable(course.getSectionId()).ifPresent(sectionId -> {
+            if (!sectionRepository.existsById(sectionId)) {
+            logger.debug("[DEBUG] No Section with id: {}", sectionId);
+            throw new NotFoundException("Section", "id", sectionId);
+            }
+        });
+
+        Optional.ofNullable(course.getSubjectReqId()).ifPresent(subjectReqId -> {
+            if (!subjectReqRepository.existsById(subjectReqId)) {
+            logger.debug("[DEBUG] No Subject Requirement with id: {}", subjectReqId);
+            throw new NotFoundException("Subject Requirement", "id", subjectReqId);
+            }
+        });
+
+        Optional.ofNullable(course.getTeacherReqId()).ifPresent(teacherReqId -> {
+            if (!teacherReqRepository.existsById(teacherReqId)) {
+            logger.debug("[DEBUG] No Teacher Requirement with id: {}", teacherReqId);
+            throw new NotFoundException("Teacher Requirement", "id", teacherReqId);
+            }
+        });
+
+        if (courseRepository.existsByUniqueFields(course)) {
+            logger.warn("[WARN] Course already exists: " + course.toString());
+            if (!courseRepository.findByUniqueFields(course).getId().equals(course.getId())) {
+                logger.warn("[WARN] Course already exists: " + course.toString());
+                throw new FieldValueAlreadyExistsException("Course", "all", course.toString());
+            }
+        }
+
+        Course newCourse = courseRepository.save(course);
+        logger.debug("[DEBUG] Saved Course with id: {}", newCourse.getId());
         return newCourse;
     }
 }

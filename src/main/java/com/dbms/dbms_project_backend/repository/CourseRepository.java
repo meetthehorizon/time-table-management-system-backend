@@ -22,8 +22,4 @@ public interface CourseRepository {
 
     public Course findByUniqueFields(Course course);
 
-
-
-    
 }
-

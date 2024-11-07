@@ -1,5 +1,8 @@
 package com.dbms.dbms_project_backend.config;
 
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,10 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -26,17 +25,18 @@ public class SecurityConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    public SecurityConfiguration(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
             AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        logger.info("[INFO] SecurityConfiguration initialized with JwtAuthenticationFilter and AuthenticationProvider");
+        logger.info("[INFO] SecurityConfiguration initialized with "
+                + "JwtAuthenticationFilter and AuthenticationProvider");
     }
 
     @SuppressWarnings("removal")
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
         logger.debug("[DEBUG] Configuring HttpSecurity");
         http.csrf()
                 .disable()
@@ -52,7 +52,8 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         logger.info("[INFO] SecurityFilterChain configured successfully");
         return http.build();
@@ -64,7 +65,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST","PUT", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Access-Control-Allow-Origin");

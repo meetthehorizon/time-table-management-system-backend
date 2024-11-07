@@ -14,11 +14,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class UpdateTeacherReqDto {
-
     private Long schoolId;
     private Long subjectId;
     private Long teacherId;
     private Position position;
-    
-   
 }

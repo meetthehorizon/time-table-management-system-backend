@@ -13,7 +13,6 @@ import com.dbms.dbms_project_backend.repository.EmployeeRepository;
 import com.dbms.dbms_project_backend.repository.SchoolRepository;
 import com.dbms.dbms_project_backend.repository.UserRepository;
 
-
 @Service
 public class EmployeeService {
     @Autowired
@@ -24,7 +23,6 @@ public class EmployeeService {
 
     @Autowired
     private UserRepository userRepository;
-    
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
@@ -50,15 +48,13 @@ public class EmployeeService {
     public Employee update(Employee employee) {
         logger.info("[INFO] Updating employee with id: {}", employee.getId());
 
-         if (employee.getId() != null && !userRepository.existsById(employee.getId())) {
+        if (employee.getId() != null && !userRepository.existsById(employee.getId())) {
             throw new NotFoundException("User", "id", employee.getId());
         }
 
         if (employee.getSchoolId() != null && !schoolRepository.existsById(employee.getSchoolId())) {
             throw new NotFoundException("School", "id", employee.getSchoolId());
         }
-
-      
 
         Employee updatedEmployee = employeeRepository.update(employee);
         logger.debug("[DEBUG] Updated employee: {}", updatedEmployee);

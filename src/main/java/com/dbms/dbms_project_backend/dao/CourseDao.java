@@ -23,50 +23,67 @@ public class CourseDao implements CourseRepository {
 
 	@Override
 	public List<Course> findAll() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+		String sql = "SELECT * FROM courses";
+		List<Course> courses = jdbcTemplate.query(sql, rowMapper);
+		return courses;
 	}
 
 	@Override
 	public Optional<Course> findById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findById'");
+		String sql = "SELECT * FROM courses WHERE id = ?";
+		List<Course> course = jdbcTemplate.query(sql, rowMapper, id);
+
+		if (course.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(course.get(0));
+		}
 	}
 
 	@Override
 	public Course save(Course course) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'save'");
+		String sql = "INSERT INTO courses (section_id, subject_req_id, teacher_req_id) VALUES (?, ?, ?)";
+		jdbcTemplate.update(sql, course.getSectionId(), course.getSubjectReqId(), course.getTeacherReqId());
+
+		course.setId(jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class));
+		return course;
 	}
 
 	@Override
 	public Course update(Course course) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'update'");
+		String sql = "UPDATE courses SET section_id = ?, subject_req_id = ?, teacher_req_id = ? WHERE id = ?";
+		jdbcTemplate.update(sql, course.getSectionId(), course.getSubjectReqId(), course.getTeacherReqId(),
+				course.getId());
+		return course;
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+		String sql = "DELETE FROM courses WHERE id = ?";
+		jdbcTemplate.update(sql, id);
 	}
 
 	@Override
 	public boolean existsById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'existsById'");
+		String sql = "SELECT COUNT(*) FROM courses WHERE id = ?";
+		int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+		return count > 0;
 	}
 
 	@Override
 	public boolean existsByUniqueFields(Course course) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'existsByUniqueFields'");
+		String sql = "SELECT COUNT(*) FROM courses WHERE section_id = ? AND subject_req_id = ?";
+		int count = jdbcTemplate.queryForObject(sql, Integer.class, course.getSectionId(), course.getSubjectReqId());
+
+		return count > 0;
 	}
 
 	@Override
 	public Course findByUniqueFields(Course course) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findByUniqueFields'");
-	}
+		String sql = "SELECT * FROM courses WHERE section_id = ? AND subject_req_id = ?";
 
+		Course existingCourse = jdbcTemplate.queryForObject(sql, rowMapper, course.getSectionId(),
+				course.getSubjectReqId());
+		return existingCourse;
+	}
 }

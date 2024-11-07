@@ -11,9 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddEnrollmentDto {
-    @NotNull(message = "StudentId is required")
-    private Long studentId;
+  @NotNull(message = "StudentId is required")
+  private Long studentId;
 
-    @NotNull(message = "SectionId is required")
-    private Long sectionId;
+  @NotNull(message = "SectionId is required")
+  private Long sectionId;
 }
